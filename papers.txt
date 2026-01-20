@@ -1,0 +1,2010 @@
+Academic Editors: Yuming Jiang,
+Wencheng Li and Xiaorui Liu
+Received: 14 July 2025
+Revised: 9 August 2025
+Accepted: 16 August 2025
+Published: 21 August 2025
+Citation: Desai, A.; Mahto, R.
+Multi-Class Classification of Breast
+Cancer Subtypes Using ResNet
+Architectures on Histopathological
+Images. J. Imaging 2025, 11, 284.
+https://doi.org/10.3390/
+jimaging11080284
+Copyright: © 2025 by the authors.
+Licensee MDPI, Basel, Switzerland.
+This article is an open access article
+distributed under the terms and
+conditions of the Creative Commons
+Attribution (CC BY) license
+(https://creativecommons.org/
+licenses/by/4.0/).
+Article
+Multi-Class Classification of Breast Cancer Subtypes Using
+ResNet Architectures on Histopathological Images
+Akshat Desai 1 and Rakeshkumar Mahto 2,*
+1 Department of Computer Science, California State University, Fullerton, CA 92831, USA;
+akshatdesai@csu.fullerton.edu
+2 Department of Electrical and Computer Engineering, California State University, Fullerton, CA 92831, USA
+* Correspondence: ramahto@fullerton.edu
+Abstract
+Breast cancer is a significant cause of cancer-related mortality among women around the
+globe, underscoring the need for early and accurate diagnosis. Typically, histopathological
+analysis of biopsy slides is utilized for tumor classification. However, it is labor-intensive,
+subjective, and often affected by inter-observer variability. Therefore, this study explores
+a deep learning-based, multi-class classification framework for distinguishing breast cancer subtypes using convolutional neural networks (CNNs). Unlike previous work using
+the popular BreaKHis dataset, where binary classification models were applied, in this
+work, we differentiate eight histopathological subtypes: four benign (adenosis, fibroadenoma, phyllodes tumor, and tubular adenoma) and four malignant (ductal carcinoma,
+lobular carcinoma, mucinous carcinoma, and papillary carcinoma). This work leverages
+transfer learning with ImageNet-pretrained ResNet architectures (ResNet-18, ResNet-34,
+and ResNet-50) and extensive data augmentation to enhance classification accuracy and
+robustness across magnifications. Among the ResNet models, ResNet-50 achieved the
+best performance, attaining a maximum accuracy of 92.42%, an AUC-ROC of 99.86%, and
+an average specificity of 98.61%. These findings validate the combined effectiveness of
+CNNs and transfer learning in capturing fine-grained histopathological features required
+for accurate breast cancer subtype classification.
+Keywords: deep learning; convolutional neural networks (CNNs); ResNet architecture;
+breast cancer
+1. Introduction
+Breast cancer is one of the leading causes of mortality among women across the
+globe. According to data reported by the WHO in 2022, approximately 2.3 million women
+around the world were diagnosed with breast cancer, among whom 670,000 lost their
+lives [1]. One of the major causes behind such a high number is late-stage diagnosis, which
+means the disease has already progressed to an advanced stage where treatment options
+are limited. Therefore, early detection is critical to confirm the presence of cancer and
+determine its specific subtype since the prognosis, treatment response, and progression
+depend on subtype classification. Hence, there is an urgent need to develop an automated,
+efficient, cost-effective, and objective diagnostic tool to identify the breast cancer subtype.
+This is crucial since it enables physicians to provide an effective treatment plan, ultimately
+improving the patient’s survival rate.
+Traditionally, breast cancer is diagnosed through histopathological examination [2–5],
+where tissue samples are analyzed by pathologists under a microscope and classified as
+J. Imaging 2025, 11, 284 https://doi.org/10.3390/jimaging11080284
+J. Imaging 2025, 11, 284 2 of 22
+either benign or malignant. Similarly, other common diagnostic techniques employed
+include mammography [6–8], ultrasound [9–11], magnetic resonance imaging (MRI) [12],
+and biopsy-based histopathology [13,14]. All of these techniques are effective in diagnosing
+breast cancer. However, each has certain shortcomings. Mammography-based breast
+cancer screening can result in false positives or negatives for women with dense breast
+tissue. Ultrasound- and MRI-based diagnostic techniques are very effective; however,
+their dependence on a skilled operator has made them expensive and inaccessible in
+resource-limited settings. Although histopathology is considered the gold standard in
+breast cancer diagnosis, it is labor-intensive and prone to inter-observer variability, which
+can result in inconsistent diagnoses among pathologists, particularly in high-volume
+diagnostic workflows. Given the challenges associated with each of these techniques, it
+is crucial to have a reliable, cost-effective solution that can assist medical professionals,
+reduce diagnostic workload, and enhance accessibility. This can be achieved with the help
+of artificial intelligence (AI) and machine learning (ML). By leveraging these advanced
+techniques together with deep learning on histopathological images, human dependence
+on diagnosing or classifying cancer types can be reduced while improving diagnostic
+accuracy. While AI cannot replace the need for invasive biopsy procedures or specialist
+oversight, it serves as an efficient decision-support system that has the potential to enhance
+accuracy and consistency in breast cancer subtype classification.
+Many studies have applied deep learning models to classify breast cancer using
+histopathological images, mammograms, and ultrasound scans. For example, convolutional neural networks (CNNs) are widely used in binary classification to distinguish
+between benign and malignant tumors. In [15], the authors used deep learning-based
+computer-aided diagnosis (CAD) systems to classify mammographic mass lesions, significantly enhancing diagnostic accuracy to 98.94% and reducing reliance on unnecessary biopsies. Similarly, in another study, CNN-based classification was applied to the
+mini-MIAS database, consisting of mammographic images, achieving an impressive accuracy of 89.05% and a sensitivity of 90.63% [16]. Transfer learning is another technique
+where pretrained deep learning architectures, such as VGG16, Inception, and ResNet, have
+shown remarkable accuracy in automating breast cancer detection in mammographic and
+histopathological images [17–19]. For example, Saber et al. [17] showed that through transfer learning with models such as VGG16 and ResNet-50, breast cancer can be diagnosed
+using mammographic images, with an impressive accuracy of 98.96%. Another study
+by Shahidi et al. [19] showed that using preprocessing, data augmentation, and model
+selection techniques, transfer learning models like ResNeXt and SENet can improve breast
+cancer classification.
+Although advancements using deep learning models have led to significant progress
+in breast cancer diagnosis, most existing studies mainly focus on binary classification
+(benign vs. malignant) rather than on differentiating specific histopathological subtypes.
+Breast cancer is a heterogeneous disease; hence, it has multiple subtypes, each of which
+requires its own treatment. However, researchers have conducted limited work with deep
+learning models for multi-class classification of breast cancer subtypes using histopathological images. Due to this research gap, it is essential to study the ability of CNN-based deep
+learning architectures such as ResNet to classify the various histopathological subtypes
+of breast cancer. Hence, in this work, we examine various ResNet architectures for multiclass classification of breast cancer subtypes using histopathological images. Moreover,
+in this work, we employ the ResNet-18, ResNet-34, and ResNet-50 models to evaluate their
+performance in distinguishing between eight tumor subtypes in the BreaKHis dataset [20]
+at multiple magnifications (40X, 100X, 200X, and 400X). By analyzing the effectiveness of
+these deep learning models, this study will advance current efforts to automate histopatho-
+J. Imaging 2025, 11, 284 3 of 22
+logical classification, which will eventually reduce diagnostic subjectivity and improve the
+accuracy of breast cancer subtype identification.
+The remainder of this paper is organized as follows. Section 2 discusses relevant
+studies conducted using the BreaKHis dataset. Section 3 presents the methodology utilized
+in this work to examine the performance of the various ResNet models. Section 4 presents
+the results, where various metrics are used to evaluate the performance of the different
+ResNet models. Then, we conclude by describing the implications of this study and its
+effects on breast cancer diagnosis, as well as potential directions for future research.
+2. Related Works
+In this study, we utilize the BreaKHis dataset, which has been widely used as a
+benchmark for testing AI-based models in breast cancer diagnosis [20]. The dataset consists
+of 7909 histopathological images from 82 patients, which are categorized into benign and
+malignant tumors. Each category is further divided into four subtypes. Additionally,
+the dataset provides images at four different magnification levels, including 40X, 100X,
+200X, and 400X, meaning deep learning models are trained on varying image resolutions.
+Researchers have conducted various studies using the BreaKHis dataset to apply ML and
+AI models for diagnosing breast cancer. Some of the key techniques are outlined below.
+2.1. Machine Learning Techniques
+Initial research using the BreaKHis dataset for diagnosing breast cancer included utilizing traditional machine learning techniques to classify histopathological images. For this
+purpose, handcrafted features were first extracted, followed by applying classifiers such
+as support vector machine (SVM), k-nearest neighbor (k-NN), decision tree, and random
+forest. For instance, in [21], Alqudah et al. utilized sliding-window-based feature extraction
+using Local Binary Pattern (LBP) features, where they divided each image into 25 sliding windows for localized feature extraction. These extracted features were then utilized
+to train a support vector machine (SVM) classifier, achieving an impressive accuracy of
+91.2%. Another study by Ariateja et al. extracted features that included color, Gabor filter,
+and GLCM descriptors, which were later utilized to train a weighted k-nearest neighbor
+(weighted k-NN) algorithm to classify histopathological images [22]. The method proposed
+in [22] achieved classification accuracies of 90% at 40X, 100X, and 200X magnifications,
+and 89.6% at 400X, demonstrating its potential for supporting breast cancer histopathology
+analysis. In a similar study by Murtaza et al. [23], the authors trained a decision tree model
+using the BreaKHis dataset and fine-tuned it on the Bioimaging Challenge 2015 dataset.
+Using a misclassification reduction algorithm, they achieved a classification accuracy ranging from 87.5% to 100% across four breast tumor subtypes. All these traditional machine
+learning techniques have shown promise. However, they have limitations due to their
+overreliance on feature extraction. Hence, conventional machine learning techniques are
+unable to capture complex patterns inherent in histopathological images.
+2.2. Deep Learning Models for Binary Classification
+Similarly, earlier work on applying deep learning models to the BreaKHis dataset
+focused primarily on binary classification using CNNs. These models focused only on
+differentiating between benign and malignant tumors. Araújo et al. in [24] trained a CNN
+model using the BreaKHis dataset, achieving an accuracy of 83.3% across all magnifications.
+Similarly, in another work by Spanhol et al., a patch-based CNN model was utilized for feature extraction and classification, achieving an accuracy of 85.6% at 200X magnification [20].
+These works underscore the potential of deep learning models to automatically learn hierarchical features from histopathological images.
+J. Imaging 2025, 11, 284 4 of 22
+2.3. Transfer Learning and Model Optimization
+The use of deep learning for the BreaKHis dataset was further advanced by Bayramoglu et al. through the combined use of CNNs with transfer learning, resulting in accuracy
+improving to 87.3% at 400X magnification [25].
+A further advancement in breast cancer classification for benign and malignant tumors
+was achieved through a hybrid of a CNN and Long Short-Term Memory (LSTM) with
+federated learning, resulting in an accuracy of 93% [26]. A similar hybrid technique was
+utilized by Kaddes et al. in [27], achieving an impressive accuracy of 99.90%. Besides hybrid
+techniques, various deep learning models, including ResNeXt-50, DPN131, and DenseNet169, have been utilized to classify binary cancer types, achieving an impressive accuracy
+of 99.5% [28]. This shows the impact and progress made in distinguishing benign from
+malignant tumors due to advancements in deep learning.
+However, even when AI demonstrates its potential in breast cancer diagnostics through
+binary classification, it is not sufficient to capture the full heterogeneity of breast cancer [29].
+Since breast cancer consists of multiple histopathological subtypes, developing a multi-class
+classification model is essential to ensure that patients can receive the proper treatment plan.
+2.4. Deep Learning Models for Multi-Class Classification
+Although binary classification in breast cancer research using deep learning shows
+great promise and potential, it is not sufficient, since subtype classification is essential for
+personalized treatment. For this purpose, multi-class classification of histopathological
+subtypes of breast cancer is necessary. In the BreaKHis dataset, there are eight classes into
+which images are categorized: adenosis (A), ductal carcinoma (DC), fibroadenoma (F), lobular carcinoma (LC), mucinous carcinoma (MC), papillary carcinoma (PC), phyllodes tumor
+(PT), and tubular adenoma (TA). Research was conducted in this direction by Umer et al.,
+who proposed a six-branch deep convolutional neural network (6B-Net) with feature fusion
+and selection mechanisms for multi-class breast cancer classification [30]. When this model
+was applied to the BreaKHis dataset to classify histopathological images into eight breast
+cancer classes, an accuracy of 90.10% was achieved. Another research work adopted a
+DenseNet121-based deep learning model that achieved an average accuracy of 92.50% [31].
+The BreaKHis dataset enables advancements in AI-driven breast cancer diagnosis,
+which can result in significant progress in binary and multi-class classification tasks. Traditional machine learning models, although not very accurate, provide the groundwork
+for integrating advanced deep learning models to further improve classification accuracy.
+Although the use of deep learning, transfer learning, and model optimization has significantly improved the accuracy of binary classification, much work still needs to be done in
+multi-class classification. The complexity and heterogeneity of breast cancer make further
+advancements in multi-class classification necessary to enable precise and personalized
+treatment planning.
+3. Dataset and Preprocessing
+3.1. BreaKHis Dataset
+The BreaKHis dataset is publicly available [20] and consists of histopathological breast
+cancer images widely used for benchmarking machine learning and deep learning models
+for breast cancer classification. The dataset contains 7909 microscopic images obtained from
+82 patients. Each image in the dataset corresponds to a breast tumor specimen extracted
+through biopsy procedures, as shown in Figure 1. Additionally, each image is available at
+four different magnification levels (40X, 100X, 200X, and 400X), capturing tissue structures
+at varying resolutions and enabling multi-scale feature learning, as shown in Table 1.
+The lower magnifications (40X, 100X) are ideal for broader tissue morphology, whereas the
+J. Imaging 2025, 11, 284 5 of 22
+higher magnifications (200X, 400X) show detailed cellular structures, which are crucial for
+deep learning models in differentiating tumor subtypes.
+(a) (b) (c) (d)
+(e) (f) (g) (h)
+Figure 1. Histopathological images of different breast tumor subtypes from the BreaKHis dataset
+at various magnifications: (a) adenosis (40X), (b) fibroadenoma (100X), (c) phyllodes tumor (200X),
+(d) tubular adenoma (400X), (e) ductal carcinoma (40X), (f) lobular carcinoma (100X), (g) mucinous
+carcinoma (200X), and (h) papillary carcinoma (400X).
+Table 1. Four magnification levels in BreaKHis, categorized into benign and malignant tumor subtypes.
+Magnification
+Level Description Application
+40X Low-resolution overview of tissue structure Identifying overall morphology
+100X Balanced detail of cell structure and
+tissue morphology Intermediate analysis
+200X Detailed examination of cellular organization Feature extraction for
+AI models
+400X High-resolution visualization of individual
+cell structures Fine-grained classification
+Each tumor sample in the dataset is further classified into four subcategories for
+both benign and malignant cases, as shown in Table 2. In oncology, precise information
+regarding the varied growth patterns, aggressiveness, and treatment responses of different
+cancer types is vital, which can only be achieved through multi-class classification. Given
+that the dataset is imbalanced, with malignant cases significantly outnumbering benign
+cases, data processing and augmentation are essential to train and build a robust model.
+Table 2. Tumor subtypes in the BreaKHis dataset. The dataset includes both benign and malignant
+tumors, each further categorized into four distinct subtypes.
+Benign Tumors Malignant Tumors
+Adenosis: Non-cancerous overgrowth of glands within
+the lobules
+Ductal Carcinoma: The most common malignant tumor,
+originating in the milk ducts
+Fibroadenoma: Common benign tumor composed of
+fibrous and glandular tissues
+Lobular Carcinoma: Cancer that begins in the lobules
+and tends to spread diffusely
+Phyllodes Tumor: Rare fibroepithelial tumor with
+potential to recur
+Mucinous Carcinoma: Malignant tumor characterized by
+mucin production
+Tubular Adenoma: Well-circumscribed benign tumor of
+tightly packed tubules
+Papillary Carcinoma: Malignant tumor with papillary
+structural patterns
+Tumor descriptions have been adapted for clarity.
+J. Imaging 2025, 11, 284 6 of 22
+3.2. Preprocessing and Augmentation
+For applying deep learning models for image classification of histopathological data,
+it is essential for the model to effectively learn discriminative features while mitigating
+variations in staining techniques, imaging conditions, and tissue structures. A robust
+preprocessing pipeline is especially necessary for the BreaKHis dataset since the images in
+this dataset are of varying resolutions, intensity distributions, and orientations.
+3.2.1. Image Resizing
+As discussed earlier, the BreaKHis dataset consists of images at different magnification levels (40X, 100X, 200X, and 400X), leading to variations in spatial resolution. Deep
+learning models such as CNNs require input images to be of uniform size for batch processing. Hence, to ensure uniformity and compatibility with pretrained architectures such
+as ResNet, all images were resized to a standard resolution of 224 × 224 pixels. The resizing operation maintains spatial consistency across different magnifications, reduces
+computational overhead, and ensures compatibility with ImageNet-pretrained models.
+Although image resizing causes a loss of fine-grained cellular details, the use of deep
+feature extraction layers in the ResNet architecture compensates for this loss by capturing
+hierarchical spatial information.
+3.2.2. Normalization
+The next step in preparing the dataset for training and testing was normalization.
+This step is crucial for deep learning since it standardizes image intensity distributions,
+stabilizing training and improving model convergence. Among the various techniques,
+in this work, mean-variance normalization was applied to scale pixel values to a zero-mean,
+unit-variance distribution:
+I
+′ =
+I − µ
+σ
+(1)
+where I
+′
+is the normalized image, I represents the original pixel intensity, µ is the datasetwide mean, and σ is the standard deviation. This transformation reduces the variability
+introduced by staining differences in histopathological slides and ensures a consistent
+input distribution.
+3.3. Data Splitting Strategy
+To train the ResNet models and later evaluate them, we randomly split the dataset
+into three subsets that included 80% for training, 10% for validation, and the remaining
+10% for testing. The use of a random split ensures that each subset contains a diverse
+representation of the eight breast cancer subtypes, ensuring that the trained model can
+generalize well across unseen samples. In this work, stratified sampling was not used due
+to the multi-class nature of the classification task; instead, random shuffling was performed
+prior to splitting to ensure variability across sets.
+3.4. Data Augmentation
+Data augmentation is applied when a dataset contains a limited number of images.
+Hence, using this technique, the training dataset was expanded artificially by applying
+a series of transformations to improve the model’s robustness and generalization. This
+technique is appropriate since the BreaKHis dataset contains limited histopathological
+images. The data augmentation process introduces variations in image orientation and
+appearance while preserving the essential structural patterns required for classification,
+reducing the possibility of overfitting. In this work, augmentation was applied through the
+PyTorch (version 2.5.1+cu124) transforms pipeline.
+J. Imaging 2025, 11, 284 7 of 22
+3.4.1. Random Horizontal Flipping
+Histopathological slides can exhibit variations in tissue orientation due to the preparation process. Hence, to prevent potential biases arising from these positional differences,
+random orientation flipping is employed. In this work, random flipping of images with
+a probability of 50% was applied. This ensures that the model is not biased toward a
+particular tissue orientation.
+3.4.2. Random Rotation (±10◦
+)
+Random rotation of images within the range of ±10° was applied to account for the
+possible variation in slide position under the microscope.
+"
+x
+′
+y
+′
+#
+=
+"
+cos θ − sin θ
+sin θ cos θ
+#"x
+y
+#
+(2)
+where (x, y) represent the original pixel coordinates, (x
+′
+, y
+′
+) represent the rotated coordinates
+after transformation, and θ is the randomly selected rotation angle between −10° and +10°.
+3.5. Handling Class Imbalance
+In the BreaKHis dataset, malignant tumor samples significantly outnumber benign
+ones, which can result in the deep learning model being biased toward the majority
+class. Hence, in this work, instead of applying popular class balancing techniques such as
+oversampling, undersampling, or weighted loss functions, we applied random shuffling.
+4. Methodology
+This study proposes an automated deep learning-based classification framework
+leveraging Residual Networks (ResNet-18, ResNet-34, and ResNet-50) for classifying eight
+distinct tumor subtypes. The model architecture is designed to efficiently extract and
+learn hierarchical feature representations, enabling multi-class classification with high
+accuracy. The methodology employed in this study consists of multiple stages, including
+data acquisition, model architecture, training strategy, and evaluation.
+4.1. Overview of the Proposed Model
+The proposed deep learning framework follows a structured pipeline that begins
+with the acquisition of images from the BreaKHis dataset, followed by preprocessing
+and augmentation, including image resizing, normalization, random horizontal flipping,
+and random rotation. Then, the processed dataset is fed into the ResNet-based CNN
+architecture for classification. The ResNet model employed in this work then performs
+convolutional feature extraction and residual learning, and uses fully connected classification layers, which allow for accurate differentiation among eight breast tumor subtypes, as
+shown in Figure 2.
+4.2. Deep Residual Network (ResNet) for Tumor Classification
+By addressing the vanishing gradient problem, ResNet has revolutionized deep learning applications in image classification. Traditional CNN models are effective techniques
+for various applications; however, as the architecture grows in depth, the signal that guides
+the network’s learning process dwindles to near insignificance during backpropagation.
+This makes the learning process ineffective, eventually making the network incapable of
+effectively refining its parameters. ResNet rectifies this issue through the use of a skip
+connection, as shown in Figure 2.
+J. Imaging 2025, 11, 284 8 of 22
+Figure 2. Illustration of the ResNet-based multi-class breast tumor classification model. The pipeline
+consists of convolutional feature extraction, residual block learning, global pooling, and final classification via a fully connected layer.
+The output of a residual block is computed as
+H(x) = F(x, W) + x (3)
+where x is the input to the residual block, F(x, W) is the residual function learned by the
+network, and W represents the weight matrices of the convolutional layers.
+This can be expanded further into a two-layer residual block. The transformation is
+defined as
+y = ReLU(W2 · ReLU(W1 · x + b1) + b2) + x (4)
+where W1 and W2 are the convolutional weight matrices, and b1 and b2 are the bias terms.
+4.3. ResNet Architecture
+This work implemented three variations of ResNet, including ResNet-18, ResNet-34,
+and ResNet-50, to evaluate the effectiveness of network depth in classifying the various
+breast cancer classes. Each of these architectures differs in terms of the number of layers
+and computational efficiency, as shown in Table 3. ResNet-18 and ResNet-34 use a basic
+residual block consisting of two 3 × 3 convolutional layers, whereas ResNet-50 incorporates bottleneck residual blocks, where each block consists of three convolutional layers
+(1 × 1, 3 × 3, 1 × 1 convolutions). The bottleneck residual block reduces the number of
+computations while maintaining superior feature extraction.
+Table 3. Comparison of ResNet architectures utilized in this study.
+ResNet Model Depth Residual Block Type Parameters (Millions)
+ResNet-18 18 layers Basic Block 11.7
+ResNet-34 34 layers Basic Block 21.8
+ResNet-50 50 layers Bottleneck Block 25.6
+4.4. Computational Setup and Training Time
+ResNet training and testing were conducted on a high-performance workstation.
+This workstation is equipped with an NVIDIA A100 GPU (40 GB of VRAM) (NVIDIA
+Corporation, Santa Clara, CA, USA) , an 8-core CPU, and 32 GB of RAM, and was provided
+through the National Research Platform (NRP) program [32]. All the histopathological
+images were locally stored on the workstation where the Python (version 3.12.8) scripts
+J. Imaging 2025, 11, 284 9 of 22
+were executed. Simultaneously, the performance of the three ResNet architectures was
+measured. Among the three selected ResNet models, ResNet-50 took around 30 min to an
+hour to train over 20 epochs.
+4.5. Model Training Process
+The training process of the ResNet deep learning model follows a structured pipeline,
+which ensures efficient feature extraction and residual learning ideal for multi-class breast
+tumor subtype identification. The training mechanism involves mini-batch processing,
+backpropagation, and optimization using the Adam optimizer.
+Each image first undergoes preprocessing and augmentation, after which it is fed into
+the ResNet models. All images then pass through multiple convolution processes, where
+hierarchical features from the images are extracted. The early stage captures low-level
+features such as edges and textures, while deeper layers learn high-level tumor structures.
+Then comes the residual learning mechanism in ResNet, which is critical for stable gradient
+propagation through skip connections and for mitigating the vanishing gradient problem,
+as shown in Figure 2.
+4.5.1. Forward Propagation
+Forward propagation involves the following processes:
+1. Input Image Processing:
+Each image undergoes normalization and resizing prior to entering the neural network.
+2. Convolutional Feature Extraction:
+As shown in Figure 2, the first two convolutional layers extract spatial features such
+as edges, textures, and cell morphology. These are computed using
+Y(i, j) = ∑m
+∑n
+I(i − m, j − n) · K(m, n) (5)
+where Y(i, j) is the input feature map, I(i − m, j − n) represents the input image pixels,
+and K(m, n) is the convolution kernel.
+3. Residual Learning via Skip Connections:
+The residual block allows the gradient to flow smoothly and efficiently through the
+network, which eventually helps prevent the vanishing gradient problem. This is achieved
+by adding skip connections that bypass one or more layers, enabling the network to learn
+identity mappings. The skip connection representations are shown in Equation (3) and
+Equation (4), respectively.
+4.5.2. ResNet Model Complexity and Efficiency Comparison
+Understanding the computational trade-off between the three ResNet architectures is
+vital since it allows for evaluating the effectiveness of each model in resource-constrained
+clinical environments or real-time diagnostic workflows. Beyond classification accuracy,
+factors such as model size, computational overhead (GFLOPs), and inference latency must
+be carefully considered before determining the most effective and practical architecture
+for deployment. The architectural characteristics of the three ResNet variants, ResNet-18,
+ResNet-34, and ResNet-50, are shown in Table 4. Among the three ResNet architectures,
+ResNet-18 has a shallow architecture comprising 11.18 million parameters and is the
+lightest-weight model with the smallest model size of 42.65 MB and inference time of
+3.67 milliseconds per image. On the other hand, ResNet-34 has double the number of layers
+compared to ResNet-18. Finally, ResNet-50 is the deepest among the three selected ResNet
+models, with 23.52 million parameters and a model size of 89.74 MB. All models process
+J. Imaging 2025, 11, 284 10 of 22
+input images resized to 224 × 224 pixels and are configured to classify eight distinct breast
+cancer subtypes. Transfer learning from ImageNet-pretrained weights was employed to
+enhance feature extraction capabilities. This comparative analysis will enable assessing the
+trade-off between architectural complexity and accuracy.
+Table 4. Summary of ResNet architectures for breast cancer subtype classification.
+Metric ResNet-18 ResNet-34 ResNet-50
+Total Parameters 11,180,616 21,288,776 23,524,424
+Model Size (MB) 42.65 81.21 89.74
+GFLOPs 1.824 G 3.678 G 4.132 G
+Inference Time (ms) 3.67 ± 0.07 5.15 ± 0.14 5.54 ± 0.15
+Input Resolution 224 × 224 224 × 224 224 × 224
+Output Classes 8 8 8
+Backbone ResNet-18 ResNet-34 ResNet-50
+Pretrained Weights ImageNet ImageNet ImageNet
+5. Results and Analysis
+In this section, we evaluate three deep learning models, ResNet-18, ResNet-34,
+and ResNet-50, to determine their performance in classifying breast cancer subtypes. We
+utilize multiple performance metrics, such as accuracy, precision, recall, and F1-score, for
+a well-rounded assessment. Additionally, graphical tools such as loss curves, confusion
+matrices, ROC curves, and precision–recall (PR) curves are employed to provide comprehensive insights into the models’ training dynamics, predictive behavior, and class-wise
+performance across multiple evaluation dimensions. Additionally, the effects of various
+data-balancing techniques and magnifications on accuracy and classification performance
+are evaluated.
+5.1. Model Training Dynamics and Convergence
+Among the ResNet models utilized in this study, ResNet-50, when run over 20 epochs,
+achieved superior performance. The validation accuracy of ResNet-50 improved from
+84.90% to a peak of 93.91% at epoch 5, after which it oscillated within the range of 92.64%
+to 93.91%, suggesting stable generalization to unseen data. Similarly, its training accuracy
+showed a consistent increase, improving from an initial 65.66% to 96.99% by the final epoch.
+In contrast, its validation loss steadily declined from 0.9998 to 0.0812, as shown in Figure 3.
+Except for brief fluctuations around epochs 4 and 6, ResNet-50 exhibited a continuous increase in accuracy. Overall, the accuracy and validation loss show that the model effectively
+learned to discriminate features from the training data while avoiding overfitting.
+Figure 3. Training and validation loss (left) and training and validation accuracy (right) over
+20 epochs for ResNet-50 on the BreaKHis dataset.
+J. Imaging 2025, 11, 284 11 of 22
+It is important to evaluate the performance of each of the ResNet models in terms
+of variability and potential overfitting. Hence, the ResNet-18, -34, and -50 models were
+evaluated over five random seeds. Given that the BreaKHis dataset is imbalanced, different
+training, validation, and test sets were used to ensure that the results were not biased
+by a specific split during each run. The test accuracies for each of the seeds, along with
+their mean values and 95% confidence intervals, are shown in Table 5. Among the three
+architectures, ResNet-50 achieved the highest mean test accuracy of 92.42%, with a narrow
+confidence interval (91.13–93.72%). This shows that, compared to ResNet-18 and ResNet-34,
+ResNet-50 offers strong consistency and generalization. Similarly, ResNet-18 and ResNet-34
+also achieved respectable mean accuracies of 88.74% and 88.46%, respectively.
+Table 5. Performance summary across 5 random seeds with mean accuracy and 95% confidence intervals.
+Model Test Accuracies (Seeds) Mean Accuracy (%) 95% CI (%)
+ResNet-18 [85.86, 90.15, 89.89, 87.88, 89.89] 88.74 ± 2.30 (86.44, 91.04)
+ResNet-34 [86.74, 88.76, 86.49, 90.66, 89.65] 88.46 ± 2.25 (86.21, 90.71)
+ResNet-50 [94.19, 92.42, 92.17, 91.67, 91.67] 92.42 ± 1.30 (91.13, 93.72)
+5.2. Confusion Matrix Analysis
+In this section, we examine the strengths and residual weaknesses of the trained
+ResNet models in prediction ability on the test set across subtypes using confusion matrices.
+The confusion matrices for ResNet-18, ResNet-34, and ResNet-50 are shown in Figure 4.
+The diagonal dominance indicates high accuracy across most of the classes. The three
+confusion matrices shown in Figure 4 indicate that the three ResNet models were able to
+achieve exceptional performance in classifying ductal carcinoma, adenosis, fibroadenoma,
+and tubular adenoma. However, the models still showed confusion between some of the
+classes, such as lobular carcinoma and mucinous carcinoma, as well as phyllodes tumor
+and fibroadenoma, as shown in Figure 4. These misclassifications might have resulted from
+inherent visual similarities in tissue architecture patterns and morphology among these
+subtypes. Such confusion can be minimized through the use of a balanced dataset that
+adequately represents each of the subtypes, thus allowing the model to learn distinctive
+and discriminative features.
+5.3. Analysis of Receiver Operating Characteristic (ROC) and Precision–Recall (PR) Curves
+In medical image classification tasks, especially for diseases like cancer, it is essential
+not only to achieve high overall accuracy but also to rigorously evaluate how well the model
+distinguishes between different classes. It becomes even more crucial when the dataset
+is imbalanced or when the cost of false positives and false negatives varies significantly.
+The ROC curve serves this purpose as it plots the true positive rate (sensitivity) against the
+false positive rate (specificity) at various decision thresholds. The primary metric derived
+from the ROC curve is the area under the curve (AUC), which summarizes the model’s
+ability to correctly classify positive and negative instances across all thresholds. An AUC
+score of 1.0 means perfect classification, whereas a value of 0.5 implies no discriminative
+power, which is equivalent to random guessing. In this study, the ROC curves for ResNet-18,
+ResNet-34, and ResNet-50 demonstrate that each model maintains high true positives while
+keeping false positives low across various decision thresholds, as shown in Figure 5. The
+AUC for ResNet-50 was 0.9979, signifying near-perfect classification performance across
+the eight breast tumor classes. Similarly, for ResNet-34, the AUC was 0.995, indicating
+exceptional discriminative performance as well. These high AUC values for both ResNet
+models highlight the capabilities of each in separating tumor classes with minimal overlap
+in their predictive probabilities.
+J. Imaging 2025, 11, 284 12 of 22
+(a) ResNet-18
+(b) ResNet-34
+(c) ResNet-50
+Figure 4. Confusion matrices of ResNet-18, ResNet-34, and ResNet-50 on the test dataset, showing classification performance across eight breast tumor subtypes. Each matrix illustrates correct
+predictions on the diagonal and misclassifications on the off-diagonal.
+J. Imaging 2025, 11, 284 13 of 22
+(a) ResNet-18 ROC curve (b) ResNet-34 ROC curve (c) ResNet-50 ROC curve
+(d) ResNet-18 PR curve (e) ResNet-34 PR curve (f) ResNet-50 PR curve
+Figure 5. ROC (top) and precision–recall (bottom) curves for ResNet-18, ResNet-34, and ResNet-50
+on the test set. ROC panels show the trade-off between sensitivity and specificity across thresholds.
+PR panels summarize performance under class imbalance by emphasizing precision–recall behavior.
+Although the ROC curve provides valuable insights, it can sometimes give an overly
+optimistic view in imbalanced datasets, which can result in favoring the dominant classes
+and reducing performance for the minority classes. In such cases, the precision–recall (PR)
+curve becomes a more appropriate tool. Typically, in a PR curve, precision (positive predictive value) is plotted against recall (sensitivity), explicitly focusing on the performance
+for the positive class while ignoring the true negatives, which dominate in imbalanced
+scenarios. The summary metric that is utilized for the PR curve is the area under the
+precision–recall curve (PR-AUC). Hence, the PR-AUC measures the model’s ability to
+correctly identify positive instances while minimizing false positives. This becomes crucial in cases where detecting rare classes has significant consequences. The PR curves
+for ResNet-34 and ResNet-50, across each of the 8 tumor classes, are shown in Figure 5.
+ResNet-34 shows strong PR-AUC values for all tumor subtypes, ranging from 0.85 to
+0.9898. The lowest PR-AUC is observed for class 5 (lobular carcinoma), either due to lower
+representation or high similarity with other classes. Similarly, for ResNet-50, the PR-AUC
+is even more robust, with AUC values above 0.91 and many of the classes exceeding 0.99.
+This shows that ResNet-50 consistently maintains both high precision and recall across
+tumor classes, even when the dataset is imbalanced.
+5.4. Class-Wise Performance Metrics and Detailed Analysis
+For a comprehensive understanding of the model’s performance, besides overall
+accuracy, we utilized four critical metrics: precision, recall, F1-score, and specificity. All of
+these metrics allow a thorough assessment of how well the model performs in identifying
+each of the breast cancer subtypes present in the BreaKHis dataset. Among these metrics,
+precision reflects the proportion of samples that were correctly identified as positive among
+all those predicted as positive. Precision is important in medical diagnosis, where a high
+precision score corresponds to a low false positive rate, which can minimize unnecessary
+J. Imaging 2025, 11, 284 14 of 22
+treatments or invasive procedures. Similarly, recall measures the ability of the model to
+identify all the true positives within each sample in a given class. A high recall score
+ensures that all actual cancer cases in a clinical setting are diagnosed. In an imbalanced
+dataset, the F1-score plays a vital role in providing a measure of the model’s completeness
+in identifying positive cases. Since the F1-score represents the harmonic mean of precision
+and recall, it provides a score reflecting both the accuracy of positive predictions and the
+model’s completeness in identifying positive cases. In the end, specificity reflects the ratio
+of correctly identified negative cases, thereby ensuring that the model does not raise false
+alarms while identifying non-cancerous or different subtype cases.
+Although all three ResNet models achieved impressive performance across all four
+metrics, ResNet-50 exhibited superior performance, and its evaluation is shown in Figure 6.
+Precision for each of the seven breast cancer classes was more than 93%, except for lobular
+carcinoma. For the same class (lobular carcinoma), the F1-score and recall were under 78%,
+likely due to the subtle visual differences with other subtypes or due to fewer training
+samples. Except for lobular carcinoma, the model exhibited superior performance for other
+subtypes. For instance, adenosis achieved the highest scores in each category, including a
+precision of 0.9767, a recall of 0.9545, and an F1-score of 0.9655, showing the trained model’s
+exceptional ability in identifying adenosis with minimal misclassifications. Similar to
+adenosis, tubular adenoma, fibroadenoma, and papillary carcinoma also showed superior
+scores in precision, recall, and F1-score. The model achieved impressive scores of 0.9710 and
+0.9477 in recall and F1-score, respectively, for ductal carcinoma, one of the most prevalent
+and clinically significant subtypes of malignant tumors. This shows that the trained model
+can play a pivotal role in detecting this critical class with minimal false negatives, as shown
+in Figure 6. Besides precision, recall, and F1-score, the model consistently achieved high
+specificity, with each subtype scoring more than 0.92. In some cases, such as adenosis,
+tubular adenoma, and papillary carcinoma, the specificity score approached near-perfect
+values. This shows that the trained ResNet-50 model has the ability to minimize false
+positive predictions, which is an essential characteristic in clinical applications.
+Figure 6. Precision, recall, F1-score, and specificity for each of the eight breast cancer classes using
+the ResNet-50 model.
+To measure the impact and effectiveness of the proposed ResNet model, it is crucial
+to compare it with existing published works that also utilized the BreaKHis dataset and
+J. Imaging 2025, 11, 284 15 of 22
+applied multi-class classification on breast tumor subtypes. This comparison is presented
+in Table 6, where the proposed technique is shown to achieve superior accuracy compared
+to previously reported methods that achieved accuracies ranging from 73.68% to 91.3%.
+In these methods, various techniques such as traditional CNNs, Inception V3, and attentionbased networks like ECSAnet were employed. For most of the methods shown in Table 6,
+the datasets were split in an 80:20 ratio for the training and test sets. In some cases, they
+were split into training, test, and validation sets. For uniformity, the validation and test
+divisions are combined into one category. This comparison clearly shows the robustness and
+practical potential of the proposed model in automating breast cancer subtype classification
+for clinical pathology.
+Table 6. Comparison of classification performance with existing methods.
+Work Method Dataset Split (Train:Test) Classification Type Accuracy
+[33] CNN 70:30 8 Class 88.23%
+[34] Inception V3 CNN 80:20 8 Class 88.16%
+[35] CNN 90:10 8 Class 73.68%
+[36] ECSAnet 70:30 8 Class 91.3%
+Proposed ResNet-18 80:20 8 Class 88.74% ± 2.30%
+Proposed ResNet-34 80:20 8 Class 88.46% ± 2.25%
+Proposed ResNet-50 80:20 8 Class 92.42% ± 0.98%
+5.5. Impact of Class Imbalance Mitigation Strategies
+As shown in Figure 6, among all subtypes, ResNet-50 performed less satisfactorily
+in classifying lobular carcinoma. This is due to the class imbalance in the dataset, where
+the number of sample histopathological images varies significantly across breast cancer
+subtypes. Therefore, class-balanced oversampling and the focal loss technique were applied
+to address this severe class imbalance in the BreaKHis dataset. These approaches were
+evaluated along with the baseline model trained with random shuffling utilized in this work.
+Utilizing focal loss and balanced oversampling improved ResNet-50’s ability to identify
+lobular and papillary carcinoma compared to random shuffling, as shown in Figure 7.
+However, the performance of focal loss and balanced oversampling either deteriorated or
+was similar in other classes. This was especially evident in ductal carcinoma. Hence, the two
+data-balancing techniques did not yield substantial improvements over the baseline model.
+Figure 7. Comparison of confusion matrices for ResNet-50 using baseline (left), balanced oversampling (middle), and focal loss (right) techniques.
+J. Imaging 2025, 11, 284 16 of 22
+5.6. Class-Wise Performance Across Magnifications
+Thus far, the accuracy of each ResNet model and its performance for each of the classes
+have been measured. However, to evaluate the robustness of the proposed models, it is
+also important to report the class-wise performance for each magnification level (40×, 100×,
+200×, and 400×) rather than collapsing the results into a single aggregated figure. This
+shows the effect of magnification on the accuracy of each ResNet model and its performance
+in classifying histopathological images. A comparison of the accuracies of ResNet-18, -34,
+and -50 for various magnification levels (40×, 100×, 200×, and 400×) is shown in Figure 8d.
+ResNet-50 performed better than ResNet-18 and ResNet-34 for 40X magnification and 200X
+magnification. Meanwhile, ResNet-34 and ResNet-18 outperformed their counterparts for
+100X magnification and 400X magnification, respectively.
+In addition to accuracy, precision was evaluated to provide a more detailed view of
+model performance for each tumor subtype across different magnifications. High precision is
+particularly important in medical diagnosis, as it reflects the likelihood that a positive classification truly corresponds to the target condition, thereby reducing the risk of unnecessary
+treatments. All ResNet models selected in this work showed superior precision in classifying
+tubular adenoma at all four magnification levels. Meanwhile, lobular carcinoma exhibited
+the most variability, with precision dropping below 0.70 in multiple cases, particularly for
+ResNet-34 at 200× (0.5263) and 400× (0.4286), suggesting greater sensitivity to magnification
+changes and possible feature overlap with other subtypes. On the other hand, for phyllodes
+tumor, the performance of ResNet-18 and ResNet-50 was much more consistent across different magnifications than ResNet-34. These findings highlight the effect of magnification and
+network depth on classification performance for certain types of cancer and accuracy.
+(a) (b)
+(c) (d)
+Figure 8. Performance across magnifications for different ResNet variants. (a) Precision per class
+for ResNet-18 across magnifications. (b) Precision per class for ResNet-34 across magnifications.
+(c) Precision per class for ResNet-50 across magnifications. (d) Overall accuracy across magnifications
+for all ResNet variants.
+J. Imaging 2025, 11, 284 17 of 22
+5.7. Visualization of Model Predictions
+Through quantitative metrics, we were able to showcase the effectiveness of the ResNet
+models in classifying breast cancer into eight subtypes. To complement the numerical
+results, a visualization of the trained model’s prediction ability provides valuable insights
+into classification performance. For this purpose, randomly selected test set images were
+applied as input to the model, and the predicted classification was then compared with
+the original class label. A grid of six histopathological images from the BreaKHis test
+set, representing various breast cancer subtypes and magnification levels, was provided
+as input to the trained ResNet-50 model. The model’s predictions (Pred), alongside the
+true class labels (True), are shown in Figure 9. In Figure 9, True class 4 represents ductal
+carcinoma, class 5 represents lobular carcinoma, and class 6 corresponds to mucinous
+carcinoma. In this figure, most of the predictions on the test samples are shown to be
+correct. However, on some occasions, misclassification may occur when the subtypes
+exhibit subtle morphological similarities.
+Figure 9. Visualization of ResNet-50 model predictions on randomly selected histopathological
+images from the BreaKHis test set. Each image displays the corresponding ground-truth class (True)
+and the predicted class (Pred) assigned by the model. The visualization highlights the model’s strong
+ability to correctly classify most tumor subtypes at varying magnifications, while also revealing
+occasional misclassifications in subtypes with subtle morphological differences.
+5.8. Model Interpretability and Explanation
+Visualizing the performance of the ResNet models in classifying breast cancer types
+is essential; however, the models must be able to highlight the histopathology images
+when they make correct or incorrect predictions. This can be achieved by using Gradientweighted Class Activation Mapping (Grad-CAM). Among the ResNet models, ResNet-50
+achieved the highest accuracy. A qualitative visualization of its performance using GradCAM on various histopathology images across various classes from the BreaKHis dataset
+is shown in Figure 10. Warmer colors indicate a more substantial positive contribution
+to the selected class. On the other hand, cooler or lighter colors indicate a small or no
+contribution. Figure 10a shows an original adenosis sample at a magnification of 100X.
+The ResNet-50 model correctly identified this sample. Figure 10b shows the Grad-CAM of
+the same histopathology image, where heat concentrates over crowded glandular/acinar
+units within the preserved lobular architecture. Similarly, another correctly predicted
+J. Imaging 2025, 11, 284 18 of 22
+sample from the phyllodes tumor category at 100X magnification and its Grad-CAM
+representation are shown in Figure 10c and Figure 10d, respectively. Besides correct
+predictions, it is vital to see what Grad-CAM highlights when the ResNet model makes
+incorrect predictions to better understand the reason behind it. Hence, in Figure 10e,g,
+the original ductal carcinoma sample is selected at a different magnification, which the
+ResNet-50 classified incorrectly as lobular carcinoma. This visualization validates both
+successful classifications and explains the specific failure modes during misclassification.
+(a) (b) (c) (d)
+(e) (f) (g) (h)
+Figure 10. Grad-CAM visualizations: (a) original benign adenosis sample, (b) Grad-CAM of benign
+adenosis, (c) original benign phyllodes tumor sample, (d) Grad-CAM of benign phyllodes tumor
+sample, (e) original ductal carcinoma sample, (f) Grad-CAM of ductal carcinoma misclassified
+as lobular carcinoma, (g) original ductal carcinoma sample, (h) Grad-CAM of ductal carcinoma
+misclassified as lobular carcinoma.
+6. Discussion
+This work discusses the potential of deep learning models, such as the ResNet architecture, to achieve the challenging task of multi-class classification of breast cancer subtypes
+from histopathological images. Among ResNet-18, ResNet-34, and ResNet-50, the latter
+outperformed the others across all metrics and parameters, including accuracy, AUC, ROC,
+precision, recall, F1-score, and specificity. This superior performance can largely be attributed to the deeper architecture of ResNet-50, specifically its bottleneck residual blocks,
+which enable the extraction of complex, fine-grained histopathological features essential
+for differentiating among visually similar subtypes. The model performed much better
+in classifying subtypes such as ductal carcinoma, adenosis, fibroadenoma, and tubular
+adenoma. Even though the model performed better than other published works in classifying lobular carcinoma and mucinous carcinoma, its performance for these subtypes
+was still not as strong as for others, likely due to the subtle morphological differences
+among these subtypes and their under-representation within the dataset. Hence, due to
+these observations, further research is necessary, where more advanced data augmentation
+strategies, subtype-specific learning approaches, and more balanced datasets will be used
+to improve the classification of challenging subtypes.
+J. Imaging 2025, 11, 284 19 of 22
+6.1. Practical Deployment Scenarios
+A highly accurate, trained AI model is insufficient without an actual plan for evaluating the model’s applicability in real-world clinical workflows. The proposed model can be
+deployed in two different scenarios, as outlined below.
+6.1.1. Workstation-Integrated Microscope
+In this approach, a workstation uses a histological microscope to capture images,
+deploys the trained ResNet model in the same environment, and promptly classifies
+the breast cancer type [37]. In the preprocessing steps, the captured image is resized to
+224 × 224 pixels, and after normalization, it is fed as input to the ResNet model, which classifies the histopathological image into one of the eight categories. In this scenario, pathologists can utilize and interact with an AI model for diagnosis, fostering a “dialogue-mode”
+workflow that combines human expertise with machine precision.
+6.1.2. Remote Processing Workflow
+In some scenarios, the trained AI model needs more computational resources, making it impossible to deploy using the workstation-integrated microscope setup. In such
+cases, histopathological slides are digitized and transferred to a centralized server for
+analysis. Typically, in this type of setup, images undergo manual or semi-automated
+preprocessing, including format conversion and spatial resolution adjustments. After preprocessing, the image is applied to the trained model, which classifies it into one of the
+categories. Although this approach requires access to high computational resources, it
+suffers from latency issues due to data transfer and preprocessing overhead.
+6.2. Future Work
+In a recent work conducted using an ensemble of Swin Transformers, on the BreaKHis
+dataset, BreaST-Net achieved a higher test accuracy of 96% across eight subtypes (at
+40× magnification) [38]. However, some of the metrics used in the model were performancerelated. Similarly, Joseph et al. used a hybrid method combining a handcrafted feature
+extraction technique and a deep neural network (DNN) classifier, achieving an accuracy
+of 97.89% in multi-class classification of breast cancer subtypes on the same dataset [39].
+Likewise, Chikkala et al. proposed a novel bidirectional recurrent neural network (BRNN)
+framework that integrates a ResNet-50-based transfer learning backbone, Gated Recurrent
+Units (GRUs), residual collaborative branches, and a feature fusion module for multi-class
+classification on the BreaKHis dataset, achieving an accuracy of 97.25% [40]. Sharma et al.
+used a VGG16 pretrained network with a linear SVM classifier on the BreaKHis dataset,
+achieving an accuracy slightly better than that of the ResNet-50 model proposed in this
+work [41]. These recent publications highlight that by incorporating advanced architectures,
+such as transformers or recurrent neural networks, or by using hybrid learning approaches
+that integrate handcrafted features, multi-classification of breast cancer can be achieved.
+While these models achieved slightly higher accuracies than the ResNet-50 model presented
+in this study, they often require more complex architectures or additional training resources.
+Additionally, the integration of explainable AI (XAI) methods could also improve the
+interpretability of model decisions, fostering greater trust in clinical applications. In future
+work, we will incorporate these advanced methods into the current framework, along
+with additional techniques such as ensemble learning and domain adaptation, to improve
+accuracy and generalizability. Recently, Attention GhostUNet++ achieved better contextual
+understanding and feature refinement on liver CT images, with efficient computational resource requirements [42]. Hence, comparing the ResNet models presented in this work with
+Attention GhostUNet++ is pertinent. Moreover, in future work, we will also investigate
+J. Imaging 2025, 11, 284 20 of 22
+the effect of using native image resolutions or a patch-based strategy, as discussed in [43],
+rather than the uniform resizing of 224 × 224 employed in this work. Overall, this study
+reinforces the capability of deep learning for multi-class classification of histopathological
+images and lays a strong foundation for continued research in this domain.
+7. Conclusions
+In this study, we developed and rigorously evaluated a deep learning framework for
+multi-class classification of eight breast cancer subtypes on the BreaKHis dataset using
+ResNet-18, ResNet-34, and ResNet-50. Across five random seeds, ResNet-50 delivered the
+strongest and most stable performance (mean test accuracy was equal to 92.42% ± 1.30;
+95% CI: 91.13–93.72), with high discrimination on threshold-free metrics (overall AU-ROC
+up to 99.57) and robust class-wise precision–recall behavior (PR-AUC ≥ 0.91 for all classes,
+with several ≥ 0.99). Confusion-matrix analyses showed consistently correct recognition of
+adenosis, fibroadenoma, tubular adenoma, and ductal carcinoma, while the model most
+often confused lobular with mucinous carcinoma and, to a lesser extent, phyllodes tumor
+with fibroadenoma, patterns aligned with known morphological similarity. Grad-CAM
+visualizations indicated that the network attends to histologically meaningful regions
+in both correct and error cases, providing qualitative interpretability that can support
+pathologist review. Beyond histopathology, the proposed solutions are potentially suitable
+for multi-class breast tumor classification based on X-ray mammography, ultrasonography,
+and magnetic resonance imaging, provided appropriate modality-specific preprocessing
+and retraining. Future work will investigate cross-modality transfer learning and domain
+adaptation to validate this potential on external, multi-institutional cohorts.
+Despite these strengths, limitations remain. Performance is partially constrained by
+class imbalance and dataset size, and our evaluation is limited to a single public cohort; external, multi-institutional validation is necessary to establish generalizability. Additionally,
+because the task presented in this work is image-level classification, not segmentation, our
+assessment appropriately focused on classification metrics (accuracy, AUC-ROC, PR-AUC,
+precision, recall, F1-score, and specificity) rather than surface-distance measures.
+Future work will prioritize (i) patient-level or leave-one-patient-out splitting to further mitigate potential leakage, (ii) stain normalization and domain adaptation to reduce
+site-specific bias, (iii) ensemble and transformer/hybrid backbones for harder subtypes,
+and (iv) expanded interpretability studies and prospective, pathologist-in-the-loop evaluation. Taken together, our results establish a strong, reproducible baseline for subtype-level
+histopathology classification and outline a clear path toward clinically reliable, AI-assisted
+decision support.
+Author Contributions: Conceptualization, A.D. and R.M.; methodology, A.D.; software, A.D.;
+validation, A.D. and R.M.; formal analysis, A.D.; investigation, A.D.; resources, A.D.; data curation,
+A.D.; writing—original draft preparation, R.M.; writing—review and editing, R.M.; visualization,
+R.M.; supervision, R.M. All authors have read and agreed to the published version of the manuscript.
+Funding: This research received no external funding
+Data Availability Statement: The BreaKHis dataset used in this study is publicly available at
+https://www.kaggle.com/datasets/ambarish/breakhis or via the original website at http://
+web.inf.ufpr.br/vri/databases/breast-cancer-histopathological-database-breakhis/, accessed on 30
+October 2024.
+Acknowledgments: The authors would like to thank California State University, Fullerton (CSUF),
+for providing access to Grammarly through its institutional license. During the preparation of this
+manuscript, the authors used Grammarly for grammar checking and sentence refinement. The authors
+have reviewed and edited the final manuscript and take full responsibility for its content.
+J. Imaging 2025, 11, 284 21 of 22
+Conflicts of Interest: The authors declare no conflicts of interest.
+References
+1. Løyland, B.; Sandbekken, I.H.; Grov, E.K.; Utne, I. Causes and risk factors of breast cancer, what do we know for sure? An evidence
+synthesis of systematic reviews and meta-analyses. Cancers 2024, 16, 1583. [CrossRef]
+2. Veta, M.; Pluim, J.P.; Diest, P.J.V.; Viergever, M.A. Breast cancer histopathology image analysis: A review. IEEE Trans. Biomed. Eng.
+2014, 61, 1400–1411. [CrossRef]
+3. Aswathy, M.A.; Jagannath, M. Detection of breast cancer on digital histopathology images: Present status and future possibilities.
+Inform. Med. Unlocked 2017, 8, 74–79. [CrossRef]
+4. Li, C.I.; Uribe, D.J.; Daling, J.R. Clinical characteristics of different histologic types of breast cancer. Br. J. Cancer 2005, 93,
+1046–1052. [CrossRef] [PubMed]
+5. Rakha, E.A.; Reis-Filho, J.S.; Baehner, F.; Dabbs, D.J.; Decker, T.; Eusebi, V.; Fox, S.B.; Ichihara, S.; Jacquemier, J.; Lakhani, S.R.;
+et al. Breast cancer prognostic classification in the molecular era: The role of histological grade. Breast Cancer Res. 2010, 12, 207.
+[CrossRef] [PubMed]
+6. Gøtzsche, P.C.; Olsen, O. Is screening for breast cancer with mammography justifiable? Lancet 2000, 355, 129–134. [CrossRef]
+[PubMed]
+7. Olsen, O.; Gøtzsche, P.C. Screening for breast cancer with mammography. Cochrane Database Syst. Rev. 2001, 4, CD001877.
+[CrossRef]
+8. Gøtzsche, P.C.; Jørgensen, K.J. Screening for breast cancer with mammography. Cochrane Database Syst. Rev. 2013. [CrossRef]
+9. Guo, R.; Lu, G.; Qin, B.; Fei, B. Ultrasound imaging technologies for breast cancer detection and management: A review.
+Ultrasound Med. Biol. 2018, 44, 37–70. [CrossRef]
+10. Gordon, P.B. Ultrasound for breast cancer screening and staging. Radiol. Clin. 2002, 40, 431–441. [CrossRef]
+11. Sood, R.; Rositch, A.F.; Shakoor, D.; Ambinder, E.; Pool, K.L.; Pollack, E.; Mollura, D.J.; Mullen, L.A.; Harvey, S.C. Ultrasound for
+Breast Cancer Detection Globally: A Systematic Review and Meta-Analysis. JGO 2019, 5, 1–17. [CrossRef]
+12. Bluemke, D.A.; Gatsonis, C.A.; Chen, M.H.; DeAngelis, G.A.; DeBruhl, N.; Harms, S.; Heywang-Köbrunner, S.H.; Hylton, N.;
+Kuhl, C.K.; Schnall, M.D.; et al. Magnetic resonance imaging of the breast prior to biopsy. JAMA 2004, 292, 2735–2742. [CrossRef]
+[PubMed]
+13. Kwok, T.C.; Rakha, E.A.; Lee, A.H.S.; Grainge, M.; Green, A.R.; Ellis, I.O.; Powe, D.G. Histological grading of breast cancer on
+needle core biopsy: The role of immunohistochemical assessment of proliferation. Histopathology 2010, 57, 212–219. [CrossRef]
+[PubMed]
+14. Ellis, I.O.; Humphreys, S.; Michell, M.; Pinder, S.E.; Wells, C.A.; Zakhour, H. Best Practice No 179: Guidelines for breast needle
+core biopsy handling and reporting in breast screening assessment. J. Clin. Pathol. 2004, 57, 897–902. [CrossRef]
+15. Chougrad, H.; Zouaki, H.; Alheyane, O. Deep Convolutional Neural Networks for breast cancer screening. Comput. Methods
+Programs Biomed. 2018, 157, 19–30. [CrossRef]
+16. Li, B.; Ge, Y.; Zhao, Y.; Guan, E.; Yan, W. Benign and malignant mammographic image classification based on Convolutional
+Neural Networks. In Proceedings of the 2018 10th International Conference on Machine Learning and Computing, Macau, China,
+26–28 February 2018; ICMLC ’18, pp. 247–251. [CrossRef]
+17. Saber, A.; Sakr, M.; Abo-Seida, O.M.; Keshk, A.; Chen, H. A novel deep-learning model for automatic detection and classification
+of breast cancer using the transfer-learning technique. IEEE Access 2021, 9, 71194–71209. [CrossRef]
+18. Saini, M.; Susan, S. Vggin-net: Deep transfer network for imbalanced breast cancer dataset. IEEE/ACM Trans. Comput. Biol.
+Bioinform. 2022, 20, 752–762. [CrossRef]
+19. Shahidi, F.; Daud, S.M.; Abas, H.; Ahmad, N.A.; Maarop, N. Breast cancer classification using deep learning approaches and
+histopathology image: A comparison study. IEEE Access 2020, 8, 187531–187552. [CrossRef]
+20. Spanhol, F.A.; Oliveira, L.S.; Petitjean, C.; Heutte, L. A Dataset for Breast Cancer Histopathological Image Classification. IEEE
+Trans. Biomed. Eng. 2016, 63, 1455–1462. [CrossRef] [PubMed]
+21. Alqudah, A.; Alqudah, A.M. Sliding Window Based Support Vector Machine System for Classification of Breast Cancer Using
+Histopathological Microscopic Images. IETE J. Res. 2022, 68, 59–67. [CrossRef]
+22. Ariateja, D.; Aprilliyani, R.; Chaidir, M.D. Breast cancer histopathological images classification based on weighted K-nearest
+neighbor. AIP Conf. Proc. 2024, 3215, 120007. [CrossRef]
+23. Murtaza, G.; Abdul Wahab, A.W.; Raza, G.; Shuib, L. A tree-based multiclassification of breast tumor histopathology images
+through deep learning. Comput. Med. Imaging Graph. 2021, 89, 101870. [CrossRef] [PubMed]
+24. Araújo, T.; Aresta, G.; Castro, E.; Rouco, J.; Aguiar, P.; Eloy, C.; Polónia, A.; Campilho, A. Classification of breast cancer
+histopathological images using Convolutional Neural Networks. PLoS ONE 2017, 12, e0177544. [CrossRef] [PubMed]
+J. Imaging 2025, 11, 284 22 of 22
+25. Bayramoglu, N.; Kannala, J.; Heikkilä, J. Deep learning for magnification independent breast cancer histopathology image
+classification. In Proceedings of the 2016 23rd International Conference on Pattern Recognition (ICPR), Cancun, Mexico, 4–8
+December 2016; pp. 2440–2445. [CrossRef]
+26. Mehta, S.; Khurana, S. Enhanced Breast Tumor Detection with a CNN-LSTM Hybrid Approach: Advancing Accuracy and
+Precision. In Proceedings of the 2024 2nd International Conference on Recent Trends in Microelectronics, Automation, Computing
+and Communications Systems (ICMACC), Hyderabad, India, 19–21 December 2024; pp. 14–18. [CrossRef]
+27. Kaddes, M.; Ayid, Y.M.; Elshewey, A.M.; Fouad, Y. Breast cancer classification based on hybrid CNN with LSTM model. Sci. Rep.
+2025, 15, 4409. [CrossRef]
+28. Toma, T.A.; Biswas, S.; Miah, M.S.; Alibakhshikenari, M.; Virdee, B.S.; Fernando, S.; Rahman, M.H.; Ali, S.M.; Arpanaei, F.;
+Hossain, M.A.; et al. Breast Cancer Detection Based on Simplified Deep Learning Technique with Histopathological Image Using
+BreaKHis Database. Radio Sci. 2023, 58, e2023RS007761. [CrossRef]
+29. Benhammou, Y.; Achchab, B.; Herrera, F.; Tabik, S. BreakHis based breast cancer automatic diagnosis using deep learning:
+Taxonomy, survey and insights. Neurocomputing 2020, 375, 9–24. [CrossRef]
+30. Umer, M.J.; Sharif, M.; Kadry, S.; Alharbi, A. Multi-Class Classification of Breast Cancer Using 6B-Net with Deep Feature Fusion
+and Selection Method. J. Pers. Med. 2022, 12, 683. [CrossRef]
+31. Rafiq, A.; Jaffar, A.; Latif, G.; Masood, S.; Abdelhamid, S.E. Enhanced Multi-Class Breast Cancer Classification from Whole-Slide
+Histopathology Images Using a Proposed Deep Learning Model. Diagnostics 2025, 15, 582. [CrossRef]
+32. Weitzel, D.; Graves, A.; Albin, S.; Zhu, H.; Wuerthwein, F.; Tatineni, M.; Mishin, D.; Khoda, E.; Sada, M.; Smarr, L.; et al.
+The National Research Platform: Stretched, Multi-Tenant, Scientific Kubernetes Cluster. In Proceedings of the Practice and
+Experience in Advanced Research Computing 2025: The Power of Collaboration, PEARC ’25, Columbus, OH, USA, 20–24
+July 2025. [CrossRef]
+33. Bardou, D.; Zhang, K.; Ahmad, S.M. Classification of Breast Cancer Based on Histology Images Using Convolutional Neural
+Networks. IEEE Access 2018, 6, 24680–24693. [CrossRef]
+34. Mi, W.; Li, J.; Guo, Y.; Ren, X.; Liang, Z.; Zhang, T.; Zou, H. Deep Learning-Based Multi-Class Classification of Breast Digital
+Pathology Images. Cancer Manag. Res. 2021, 13, 4605–4617. [CrossRef]
+35. Nguyen, P.T.; Nguyen, T.T.; Nguyen, N.C.; Le, T.T. Multiclass Breast Cancer Classification Using Convolutional Neural Network.
+In Proceedings of the 2019 International Symposium on Electrical and Electronics Engineering (ISEE), Ho Chi Minh City, Vietnam,
+10–12 October 2019; pp. 130–134. [CrossRef]
+36. Aldakhil, L.A.; Alhasson, H.F.; Alharbi, S.S. Attention-Based Deep Learning Approach for Breast Cancer Histopathological Image
+Multi-Classification. Diagnostics 2024, 14, 1402. [CrossRef] [PubMed]
+37. Abeyrathna, D.; Ashaduzzaman, M.; Malshe, M.; Kalimuthu, J.; Gadhamshetty, V.; Chundi, P.; Subramaniam, M. An AI-based
+approach for detecting cells and microbial byproducts in low volume scanning electron microscope images of biofilms. Front.
+Microbiol. 2022, 13, 996400. [CrossRef] [PubMed]
+38. Tummala, S.; Kim, J.; Kadry, S. BreaST-Net: Multi-Class Classification of Breast Cancer from Histopathological Images Using
+Ensemble of Swin Transformers. Mathematics 2022, 10, 4109. [CrossRef]
+39. Joseph, A.A.; Abdullahi, M.; Junaidu, S.B.; Ibrahim, H.H.; Chiroma, H. Improved multi-classification of breast cancer histopathological images using handcrafted features and deep neural network (dense layer). Intell. Syst. Appl. 2022, 14, 200066. [CrossRef]
+40. Chikkala, R.B.; Anuradha, C.; Murty, P.S.C.; Rajeswari, S.; Rajeswaran, N.; Murugappan, M.; Chowdhury, M.E. Enhancing
+Breast Cancer Diagnosis With Bidirectional Recurrent Neural Networks: A Novel Approach for Histopathological Image
+Multi-Classification. IEEE Access 2025, 13, 41682–41707. [CrossRef]
+41. Sharma, S.; Mehra, R. Conventional Machine Learning and Deep Learning Approach for Multi-Classification of Breast Cancer
+Histopathology Images—A Comparative Insight. J. Digit. Imaging 2020, 33, 632–654. [CrossRef]
+42. Hayat, M.; Aramvith, S.; Bhattacharjee, S.; Ahmad, N. Attention GhostUNet++: Enhanced Segmentation of Adipose Tissue and
+Liver in CT Images. arXiv 2025, arXiv:2504.11491. [CrossRef]
+43. Hayat, M.; Gupta, M.; Suanpang, P.; Nanthaamornphong, A. Super-Resolution Methods for Endoscopic Imaging: A Review. In
+Proceedings of the 2024 12th International Conference on Internet of Everything, Microwave, Embedded, Communication and
+Networks (IEMECON), Jaipur, India, 24–26 October 2024; pp. 1–6. [CrossRef]
+Disclaimer/Publisher’s Note: The statements, opinions and data contained in all publications are solely those of the individual
+author(s) and contributor(s) and not of MDPI and/or the editor(s). MDPI and/or the editor(s) disclaim responsibility for any injury to
+people or property resulting from any ideas, methods, instructions or products referred to in the content.
+
+
+
+Rapid #: -24884269
+CROSS REF ID: 10601034340002908
+LENDER: OQ$ (University of Zululand) :: Main Library
+BORROWER: CFI (California State Univ., Fullerton) :: Pollak Library
+TYPE: Article CC:CCG
+JOURNAL TITLE: AIP conference proceedings
+USER JOURNAL TITLE: INTERNATIONAL CONFERENCE ON ROBOTICS, AUTOMATION, AND INTELLIGENT
+COMPUTING: ICRAIC 2K24
+ARTICLE TITLE: Automated focusing and exposure control of camera for satellite observation and debry survey
+ARTICLE AUTHOR: Desai, Jiya
+VOLUME: 3255
+ISSUE: 1
+MONTH:
+YEAR: 2025-01-31
+PAGES: 030002-
+ISSN: 0094-243X
+OCLC #:
+Processed by RapidX: 7/14/2025 12:49:09 AM
+This material may be protected by copyright law (Title 17 U.S. Code)
+
+View
+Online
+
+Export
+Citation
+RESEARCH ARTICLE | JANUARY 31 2025
+Automated focusing and exposure control of camera for
+satellite observation and debry survey 
+Jiya Desai; Akshat Desai; Nikita Bhatt 
+AIP Conf. Proc. 3255, 030002 (2025)
+https://doi.org/10.1063/5.0254746
+Articles You May Be Interested In
+Long-time photometric study of UX Orionis stars
+AIP Conf. Proc. (February 2019)
+The Pleiades Using Astronomical Spectroscopic Technique within the Range of H‐α Region
+AIP Conf. Proc. (March 2011)
+H-α profile of M-type red giant stars by using astronomical spectroscopy technique
+AIP Conf. Proc. (May 2013)
+ 14 July 2025 06:47:24
+Automated Focusing and Exposure Control of Camera for
+Satellite Observation and Debry Survey
+Jiya Desai1, a)
+, Akshat Desai2, b) and Nikita Bhatt1, c)
+1Chadubhai S. Patel Institute of Technology, CHARUSAT, Changa, Anand, Gujarat, India - 388450
+2Devang Patel Institute of Advance Technology & Research, CHARUSAT, Changa, Anand, Gujarat, India - 388450
+a) jiadesai.10@gmail.com
+b) akshat.desai.754@gmail.com
+c) Corresponding author: nikitabhatt.ce@charusat.ac.in
+Abstract. The paper introduces automated focusing and exposure control algorithms tailored for a satellite-mounted
+camera, essential for observing satellites post-launch and detecting space debris. Integrated with a Ritchey-Chrétien (RC)
+telescope, the camera faces challenges in orbit due to varying distances and fluctuating light. Automated focusing (AF) and
+exposure control (AE) are vital for maintaining image clarity and optimal exposure. The Auto Exposure Algorithm features
+object tracking and skewness-based exposure adjustment, while the Auto Focusing Algorithm includes a Sharpness Score
+Evaluator and a Focus Point Search Optimizer. These algorithms improve satellite observation reliability, enhancing
+tracking accuracy and space safety amidst the crowded orbital environment.
+Index Terms- Automated focusing, automated exposure control
+INTRODUCTION
+Automated focusing and exposure control (AF and AE) are critical components for satellite-mounted cameras,
+especially for those engaged in observing other satellites post-launch or tracking space debris. As the proliferation of
+satellites in Earth's orbit continues to grow, with an estimated 5,000 to 7,000 active satellites and thousands more pieces
+of space debris, the need for effective observation systems has become paramount. Without automated systems, the
+quality and accuracy of these observations would be significantly compromised, impacting satellite operations, safety,
+and even future missions. In this research paper, we explore a project where a camera mounted on a satellite, equipped
+with a Ritchey-Chrétien (RC) telescope (Yang H.-S. a., 2004) (Figure 1), is used for observing other satellites and space
+debris. The RC telescope is a type of reflecting telescope that employs hyperbolic primary and secondary mirrors. Its
+design offers several advantages, including minimal optical aberrations, high resolution, and a wide field of view,
+making it ideal for space observation (Pedrotti, 2008). The use of an RC telescope allows for high-quality images, but
+without automated focusing and exposure control, the camera would face significant limitations in tracking and
+observing dynamic objects in orbit.
+FIGURE 1. Optical System of Satellite Camera
+Automated focusing and exposure control are crucial for overcoming challenges in satellite observation. Manual
+focusing becomes impractical due to the varying distances and trajectories of satellites, leading to potential blurry
+images. Automated focusing dynamically adjusts the lens to maintain sharpness, essential for tasks like anomaly
+detection (Kriss, 1998). Similarly, automated exposure control compensates for fluctuating light conditions, ensuring
+well-exposed images. The proposed Auto Exposure Algorithm utilizes object tracking and skewness-based exposure
+International Conference on Robotics, Automation, and Intelligent Computing
+AIP Conf. Proc. 3255, 030002-1–030002-10; https://doi.org/10.1063/5.0254746
+Published under an exclusive license by AIP Publishing. 978-0-7354-5115-5/$30.00
+030002-1
+ 14 July 2025 06:47:24
+adjustment, while the Auto Focusing Algorithm employs sharpness evaluation and focus point optimization to enhance
+the efficiency and accuracy of satellite-based observation (Liu, 2016).
+LITERATURE SURVEY
+This literature review surveys diverse methods, including mechanical autofocus and deep learning, for satellitemounted camera systems' autofocus and exposure control. It assesses their strengths and limitations to pave the way for
+the proposed solution in high-magnification imaging applications.
+Accurate and Rapid Autofocusing Methods Based on Image Quality Assement for
+Telescope Observation
+This paper explores algorithms to enhance speed and precision of auto-focus for telescope observations. The
+research focuses on image estimation functions (IEFs) to evaluate image sharpness and employs a mountain-climb
+search method for auto-focusing. (Yang C. a., 2020) The Tenengrad function, which calculates the sum of the squares
+of image gradients, is identified as particularly effective for instantaneous and accurate focusing.
+Assessment of Sharpness Measures and Search Algorithms for High Magnification Image
+Auto-Focusing
+The paper explores passive image-based autofocus control for high magnification digital imaging systems in
+monitoring and surveillance applications. (Yao, 2006) It evaluates multiple sharpness measures, such as gradient-based,
+correlation-based, statistics-based, transform-based, and edge-based methods.
+Deeply Supervised Object Detectors (DSOD)
+The first paper introduces Deeply Supervised Object Detectors (DSOD) (Shen, 2019), a framework designed to be
+trained from scratch, avoiding dependence on pre-trained models. While the DSOD approach employs deep supervision
+with dense connections, over fitting due to limited datasets presents a challenge.
+Coarse-to-Fine DNN Model for Exposure Correction
+Afifi (2021) introduces a coarse-to-fine DNN model (Afifi, 2021) for correcting overexposure and underexposure
+in camera-based imaging, trained on a dataset of 24,000 images with sub-modules for color and detail enhancement.
+However, its reliance on visible-light filters limits its applicability to real-time satellite imaging due to significant
+lighting variations.
+METHODOLOGY
+This section outlines the proposed solutions for automated focusing and exposure control, detailing the algorithms
+and validation procedures for achieving precise focus and optimal exposure in satellite-mounted cameras.
+3.1 Autofocusing Algorithm
+FIGURE 2. Real-Time Autofocusing System
+030002-2
+ 14 July 2025 06:47:24
+Sharpness Evaluator
+The Sharpness Score Evaluator is a pivotal component in the two-step autofocusing algorithm, designed to assess
+the sharpness level of captured images (Li L. a., 2016). By assigning a sharpness score to each image, this evaluator
+serves as a quantitative measure of image focus, crucial for determining the optimal focus position (Figure 2). In this
+project, four distinct algorithms were employed within the Sharpness Score Evaluator: Tenegrad, Brenner, Variance,
+and Laplace. These algorithms utilize mathematical formulas to calculate the sharpness score.
+(i) Tenengrad
+Tenengrad evaluates image sharpness based on gradient magnitude (Xia, 2016), demonstrating stability and
+sensitivity suitable for dynamic environments (1).
+𝑬 = ∑∑ [𝑺(𝒙, 𝒚)]
+𝟐
+𝒚
+𝒙
+ (1)
+𝑺 = √𝑮𝒙
+𝟐(𝒙,𝒚) + 𝑮𝒚
+𝟐(𝒙, 𝒚)
+ (2)
+Where,
+(ii) Brenner
+Brenner's algorithm calculates image sharpness by analyzing the difference between adjacent pixel intensities,
+providing a different approach to sharpness evaluation (3).
+𝑬 = ∑∑ [(𝒇(𝒙 + 𝟐, 𝒚) − 𝒇(𝒙, 𝐲))
+𝟐 + (𝒇(𝒙, 𝐲 + 𝟐) − 𝒇(𝒙, 𝐲))
+𝟐
+]
+𝒚
+𝒙
+ (3)
+(iii) Variance
+Variance-based methods assess image sharpness by analysing the variability (Amin-Naji, 2018) of pixel
+intensities within the image (4).
+𝑬 = ∑∑ [𝒇(𝒙, 𝒚) − 𝒖]
+𝟐
+𝒚
+𝒙
+ (4)
+Where,
+𝒖 =
+𝟏
+𝑴𝑵 ∑∑ 𝒇(𝒙, 𝒚)
+𝒚
+𝒙
+ (5)
+ (iv) Laplace
+Laplace-based algorithms focus on detecting edge features (Amin-Naji, 2018) in the image to evaluate sharpness
+(6).
+𝑬 = ∑∑ |𝟖𝒇(𝒙, 𝒚) − 𝒇(𝒙 − 𝟏, 𝒚 − 𝟏) − 𝒇(𝒙 − 𝟏, 𝒚) − 𝒇(𝒙 − 𝟏, 𝒚 + 𝟏)
+𝒚
+𝒙
+− 𝒇(𝒙, 𝒚 − 𝟏) − 𝒇(𝒙, 𝒚 + 𝟏) − 𝒇(𝒙 + 𝟏, 𝒚 − 𝟏) − 𝒇(𝒙 + 𝟏, 𝒚)
+− 𝒇(𝒙 + 𝟏, 𝒚 + 𝟏)|
+ (6)
+Search Optimizer
+The Focus Point Search Optimizer is vital for automated focusing, especially when manual inspection isn't
+feasible. Utilizing diverse algorithms (Abualigah, 2021), it efficiently navigates the focus space to pinpoint the optimal
+focal point for maximal image sharpness. By minimizing iterations and maximizing sharpness score, it boosts overall
+efficiency and effectiveness of auto-focusing systems.
+030002-3
+ 14 July 2025 06:47:24
+Global Optimizer
+Global optimizers search through all possible (Li C. a., 2011) focus positions to identify the optimal focus point,
+requiring extensive computational resources (Figure 3).
+FIGURE 3. Global Optimizer Flowchart
+Binary Optimizer
+Binary optimizers employ a binary search algorithm to narrow down the focus range, potentially leading to
+suboptimal focus positions due to local maxima (Figure 4).
+FIGURE 4. Binary Optimizer Flowchart
+Hill-Climbing Optimizer
+Hill-climbing optimizers attempt to find the optimal focus (Al-Betar, 2021) position by iteratively adjusting the
+focus and evaluating sharpness, but they may get stuck in local maxima (Figure 5).
+030002-4
+ 14 July 2025 06:47:24
+FIGURE 5. Hill-Climbing Optimizer Flowchart
+Fibonacci Optimizer
+Fibonacci optimizers (Fredman, 1987) use the Fibonacci search algorithm to efficiently identify the optimal focus
+position with less iteration compared to other optimizers (Figure 6).
+FIGURE 6. Fibonacci Optimizer Flowchart
+030002-5
+ 14 July 2025 06:47:24
+3.2 Auto Exposure Control
+FIGURE 7 Real-Time Exposure Control System
+Object Detection using Haar Cascade Classifier
+Camera initializes by capturing live video frames for object detection with Haar cascade classifier from OpenCV
+library. Classifier identifies objects via specific features, comparing pixel intensity sums in rectangular regions through
+integral images. (Padilla, 2012).
+FIGURE 8. Haar Cascade Classifier Features
+Exposure Time Adjustment using Skewness Calculation
+For each tracked object, a region of interest (ROI) is defined within the captured frame, focusing specifically on
+the detected object. Within the ROI, the Gray-Scale image is extracted and analysed to compute skewness (Chen,
+2017), a statistical measure indicating the degree of exposure imbalance within the region (7). (Chen, 2017) Let U be
+an M×N image. zk ∈{0,1,2,…,255} is the Gray value of U. The histogram of U, pi (zk) is defined as follows:
+𝒑𝒊(𝒛𝒌) =
+𝒒𝒊(𝒛𝒌)
+(𝐌 × 𝐍)
+ (7)
+Where, k = 0, 1….255.
+For the i
+th frame Ui (1), the third moment about middle gray, µ (i) is defined as follows:
+µ(𝒊) = ∑(𝒛𝒌 − 𝟏𝟐𝟖)
+𝟑
+𝟐𝟓𝟓
+𝒌=𝟎
+𝒑𝒊(𝒛𝒌)
+ (8)
+030002-6
+ 14 July 2025 06:47:24
+The third moment about middle gray µ (i) is employed to evaluate the exposure effect for the ith frame. The
+distribution is skewed to the right (8) if µ (i) > 0 (Chen, 2017), indicating that the image is very bright. The distribution
+is symmetric if µ (i) = 0, indicating that the exposure is accurate. Let Ti represent the ith frame's exposure time. The
+exposure time Ti+1 for the frame after the ith frame can be changed as follows:
+𝑻𝒊+𝟏 = 𝑻𝒊 + ∆ 𝑻𝒊
+,𝒊𝒇 µ (𝒊) < 𝟎 (9)
+𝑻𝒊+𝟏 = 𝑻𝒊 − ∆ 𝑻𝒊
+,𝒊𝒇 µ (𝒊) > 𝟎
+(10)
+Based on the computed skewness value (Jarvis, 2004), the exposure of the camera is dynamically adjusted using
+the pyueye library.
+FIGURE 9. Integrated Algorithm of Object Tracking & Exposure Adjustment by Skewness Calculation
+RESULT DISCUSSION
+4.1 Experiment 1: Automated Exposure Control Experiments
+This section discusses the results of experiments conducted to evaluate the performance of the automated
+exposure control (AE) algorithm. Two sets of experiments were conducted to demonstrate the algorithm's effectiveness
+in correcting underexposure and overexposure issues.
+Lab Set-up:
+The experiments were conducted in a dark room with no natural or artificial light sources, providing a controlled
+setting for testing the exposure control system. To simulate the Multi-Layer Insulator (MLI) of the satellite, a golden
+foil was used against a completely black background, mimicking the conditions of space.
+Correction of Underexposed Images:
+Underexposed image with dark areas and loss of detail improved significantly with AE algorithm, adjusting
+exposure time based on skewness. Resultant image showed balanced brightness and enhanced detail, correcting
+underexposure effectively (Figure 11).
+Correction of Overexposed Images
+Experiments tackled overexposure, exemplified by washed-out detail due to excessive light. AE algorithm
+reduced exposure time, restoring balance and detail, and preventing washout by adapting to varying light conditions.
+(Figure 13).
+030002-7
+ 14 July 2025 06:47:24
+4.2 Experiment-2: Automated Focusing Experiments
+This section discusses experiments designed to evaluate the Automated Focusing (AF) algorithm's performance,
+focusing on sharpness evaluation and search optimization. To simulate the camera's optical system, we used the Zemax
+Optic Studio tool, software designed for modeling and analyzing optical systems. By simulating the defocusing model
+within this virtual environment, we were able to test the AF algorithm before deploying it in a satellite. The following
+experiments explore the outcomes of these simulations.
+Sharpness Evaluation Performance
+In this experiment, we compared the performance of four sharpness evaluators by plotting a sharpness score
+versus image sequence graph. This graph indicates the stability and sensitivity of each algorithm. Stability is critical
+because unstable algorithms can disrupt the performance of the "Focus Point Search Optimizer." (Figure 14). The plot
+below demonstrates the stability and sensitivity of each sharpness evaluator:
+Among the evaluated algorithms, the Laplace algorithm demonstrated the best combination of stability and
+sensitivity. Its graph was both stable and steep, indicating that it provides a smooth response while being sensitive
+enough to identify the optimal focus point with a high degree of accuracy Figure (14). This finding establishes Laplace
+as the most suitable sharpness evaluator for our AF algorithm.
+FIGURE 10 Underexposed Image Captured During
+Experiment
+FIGURE 11 Perfectly Adjusted Exposure Time and Result
+FIGURE 12 Highly Saturated Image Captured During
+Experiment
+FIGURE 13 Perfectly Set Exposure Time of Highly Saturated
+Input
+030002-8
+ 14 July 2025 06:47:24
+FIGURE 14. Comparison of Sharpness Evaluator Algorithm through Sharpness Score vs Focus points Graph plot
+Focus Point Search Optimization Performance
+The Focus Point Search Optimizer plays a crucial role in identifying the optimal focus position. The performance
+of this component was evaluated based on two factors: the number of iterations required to find the optimal focus
+point and the sharpness score achieved at the optimal focus position. To ensure a fair comparison, the following
+parameters were kept consistent across all experiments: minimum focal length, maximum focal length, step size, and
+the use of the Laplace sharpness evaluator. The following four optimization algorithms were tested: Global Optimizer
+(Figure 15), Binary Optimizer (Figure 16), Hill-Climbing Optimizer (Figure 17), and Fibonacci Optimizer (Figure
+18). The readings were taken at four different object distances: 7 km, 1 km, 250 m, and 50 m. The results from these
+experiments are summarized in the following graphs, illustrating the performance of each optimizer:
+FIGURE 15 Result of Object Distance at 7 km FIGURE 16 Result of Object Distance at 1 km
+FIGURE 17 Result of Object Distance at 250 m FIGURE 18 Result of Object Distance at 50 m
+The evaluation criteria included both the number of iterations and the sharpness score at the optimal focus
+position. The Global Optimizer required the highest number of iterations, making it the least efficient choice. Although
+the Binary and Hill-Climbing optimizers required fewer iterations, they sometimes failed to achieve the desired
+sharpness score, indicating that they could get stuck in local maxima. This issue was evident in the graphs for object
+distances 250 m and 50 m. The Fibonacci Optimizer, however, consistently performed best, requiring less iteration
+030002-9
+ 14 July 2025 06:47:24
+and achieving high sharpness scores at the optimal focus position. This demonstrates the superior efficiency and
+effectiveness of the Fibonacci Optimizer for our AF algorithm.
+CONCLUSION
+Automated exposure controls (AE) and automated focusing (AF) algorithms have revolutionized satellite
+observation by addressing challenges like varying lighting conditions and precise focus in orbit. The AE Algorithm
+utilizes skewness-based adjustments and reliable object tracking for consistent performance across different lighting
+conditions. Meanwhile, the AF Algorithm employs Laplace filter for sharpness evaluation and Fibonacci Optimizer
+for search optimization, ensuring optimal focus in satellite imaging. Together, these algorithms create a stable and
+efficient system for satellite observation, reducing the impact of environmental variables and advancing satellite
+technology significantly.
+REFERENCES
+1. Abualigah, L. (2021). Group search optimizer. Neural Computing and Applications.
+2. Afifi, M. a. (2021). Learning multi-scale photo exposure correction.
+3. Al-Betar, M. A. (2021). hill climbing optimizer for examination timetabling problem. Journal of Ambient
+Intelligence and Humanized Computing, 666.
+4. Amin-Naji, M. a. (2018). Multi-focus image fusion in DCT domain using variance and energy of Laplacian and
+correlation coefficient for visual sensor networks. Journal of AI and Data Mining, 250.
+5. Chen, W. a. (2017). Exposure evaluation method based on histogram statistics. In 2017 2nd International
+Conference on Electrical, Automation and Mechanical Engineering (EAME 2017) (p. 293). Atlantis Press.
+6. Cuimei, L. a. (2017). Human face detection algorithm via Haar cascade classifier combined with three additional
+classifiers. 487: IEEE.
+7. Fredman, M. L. (1987). Fibonacci heaps and their uses in improved network optimization algorithms. Journal of
+the ACM (JACM), 615.
+8. Kriss, M. A. (1998). Model for equivalent ISO CCD camera speeds. In Digital Solid State Cameras: Designs and
+Applications (p. 67).
+9. Li, C. a. (2011). A self-learning particle swarm optimizer for global optimization problems. IEEE Transactions
+on Systems, Man, and Cybernetics, Part B (Cybernetics), 646.
+10. Li, L. a. (2016). No-reference and robust image sharpness evaluation based on multiscale spatial and spectral
+features. IEEE Transactions on Multimedia, 1040.
+11. Li, Z. a. (2005). Autofocus system for space cameras. Optical Engineering, 5.
+12. Liu, S. a. (2016). An image auto-focusing algorithm for industrial image measurement. EURASIP Journal on
+Advances in Signal Processing, 16.
+13. Padilla, R. a. (2012). Evaluation of haar cascade classifiers designed for face detection. International Journal of
+Computer and Information Engineering, 469.
+14. Pedrotti, L. S. (2008). Basic geometrical optics. Fundamentals of photonics, 116.
+15. Shen, Z. a. (2019). Dsod: Learning deeply supervised object detectors from scratch.
+16. Xia, X. a. (2016). Evaluation of focus measures for the autofocus of line scan cameras. Optik, 7775.
+17. Yang, C. a. (2020). Accurate and rapid auto-focus methods based on image quality assessment for telescope
+observation. Applied Sciences, 658.
+18. Yang, H.-S. a. (2004). Alignment methods for Cassegrain and RC telescope with wide field of view. In Space
+Systems Engineering and Optical Alignment Mechanisms (p. 341).
+19. Yao, Y. a. (2006). Evaluation of sharpness measures and search algorithms for the auto-focusing of highmagnification images.
+030002-10
+ 14 July 2025 06:47:24
+
+
+ YOLOv8-based Waste Detection System for
+Recycling Plants: A Deep Learning Approach
+Meet Shroff
+Department of Computer Engineering,
+Devang Patel Institute of Advance
+Technology and Research (DEPSTAR),
+Faculty of Technology and Engineering
+(FTE), Charotar University of Science and
+Technology (CHARUSAT), Changa,
+Gujarat, India
+, meetshroff1762@gmail.com
+Akshat Desai
+Department of Computer Science &
+Engineering,
+Devang Patel Institute of Advance
+Technology and Research (DEPSTAR),
+Faculty of Technology and Engineering
+(FTE), Charotar University of Science and
+Technology (CHARUSAT), Changa,
+Gujarat, India
+akshat.desai.754@gmail.com
+Dweepna Garg
+Department of Computer Engineering,
+Devang Patel Institute of Advance
+Technology and Research (DEPSTAR),
+Faculty of Technology and Engineering
+(FTE), Charotar University of Science and
+Technology (CHARUSAT), Changa,
+Gujarat, India
+dweeps1989@gmail.com
+Abstract—Waste management is increasingly attracting
+attention due to its role in smart and sustainable
+development, especially in developed and developing nations.
+This system consists of a series of interconnected processes
+that perform various complex functions. Deep learning has
+recently attracted interest as an alternative computational
+method to solve various waste classification challenges. Many
+researchers have focused on this area, yielding significant
+research results in recent years. Although several in-depth
+investigations have been conducted on waste detection and
+classification, the WaRP dataset was created specifically to
+train and evaluate the proposed algorithms using industrial
+data from conveyor belt of waste recycling plant.
+Surprisingly, no research has explored the application of the
+YOLOv8 model to solve the waste management problem
+using the WaRP dataset. This experiment makes a notable
+contribution by detecting waste through a pyramid and
+direct prediction method, which differs from the traditional
+model based on anchor boxes. Through experimentation with
+different YOLOv8 model weights, this research study found
+that YOLOv8s provides relatively good results with smaller
+dataset and lower processing time. On the other hand,
+YOLOv8l achieves a higher mAP50 value of about 59% on
+the same dataset, but at the cost of high inference time.
+Keywords: YOLOv8; Deep Learning; Waste Detection;
+Neural Networks; WaRP Dataset.
+I. INTRODUCTION
+Global challenges related to globalization, urbanization
+and a rapidly growing population have brought
+environmental pollution into the spotlight. While the
+world's population is growing at an alarming rate, our
+environment is suffering unprecedented degradation. In a
+recent report by the Energy and Resources Institute (TERI),
+struggling with a growing population and rapid
+development, India produced a whopping 279.5 million
+tonnes of waste in 2022, which included both municipal
+and industrial waste [1]. This massive generation of waste
+has far-reaching effects affecting the environment, the
+economy and public health. Inadequate waste management
+practices have exacerbated environmental degradation,
+leading to a global shift towards developing smart cities
+with efficient urban waste management systems. Recycling
+plays a key role in this change, providing opportunities for
+innovative research and sustainable business models.
+In the midst of these advances, however, there is an
+urgent concern - the need for accurate waste sorting based
+on biodegradability. In India, a diverse and complex
+country, implementation of effective waste classification
+faces enormous challenges such as low public awareness
+and regional differences in waste classification standards.
+Relying solely on manual tree sorting exacerbates these
+challenges, leading to high labour costs and inefficiencies
+and risks to human health. To solve these problems, India is
+adopting advanced technologies like machine vision and
+machine learning. These innovations promise to
+revolutionize waste management by improving sorting
+accuracy, improving cost-effectiveness, and promoting
+environmental sustainability. Deep learning models such as
+YOLOv8 are at the forefront of this change, providing realtime object detection capabilities, especially for waste
+classification. This work presents an innovative approach
+that uses YOLOv8 for waste sorting, taking advantage of
+its accuracy and real-time performance. By embracing the
+effectiveness of deep learning in waste management and
+creating a valuable body of knowledge, this effort is an
+important step towards a more sustainable and effective
+waste management paradigm. Its purpose is to secure our
+environment, economy and public health for future
+generations.
+The important contributions that are presented in this
+paper are as follows:
+• We have proposed a unique YOLOv8-based deep
+convolutional neural network model for waste
+segregation.
+• Our model is trained to classify and detect waste
+in 28 distinct classes.
+• Instead of using the usual anchor box approach,
+we have opted a model which features pyramid
+and direct prediction method.
+• This approach boosts detection speed, making our
+model suitable for real-time applications.
+• Our research is a unique addition to the field of
+waste segregation using the YOLOv8 model,
+which has relatively few existing studies.
+The paper's structure is as follows: Section 2 offers an
+introduction to the relevant methods. Section 3 details the
+methodology. In Section 4, an extensive analysis of
+experiments and their results are presented. Lastly, Section
+Proceedings of the International Conference on Self Sustainable Artificial Intelligence Systems (ICSSAS 2023)
+IEEE Xplore Part Number: CFP22DN7-ART; ISBN: 979-8-3503-0085-7
+979-8-3503-0085-7/23/$31.00 ©2023 IEEE 492
+2023 International Conference on Self Sustainable Artificial Intelligence Systems (ICSSAS) | 979-8-3503-0085-7/23/$31.00 ©2023 IEEE | DOI: 10.1109/ICSSAS57918.2023.10331643
+Authorized licensed use limited to: California State University Fullerton. Downloaded on September 04,2025 at 21:45:54 UTC from IEEE Xplore. Restrictions apply.
+5 wraps up the paper with a conclusion and outlines
+potential future directions.
+II. LITERATURE SURVEY
+YOLO, or You Only Look Once, is a real-time object
+detection algorithm that has revolutionized the field of
+computer vision. It`s fast, efficient and accurate, making it
+a great choice for many applications. YOLO works by
+dividing an image into a grid of cells. For each cell, YOLO
+predicts the probability that each feature class lies within
+the cell, as well as the coordinates of the object`s bounding
+box. YOLO does this in just one pass through the neural
+network, which is why it is so fast. YOLO has been shown
+to achieve optimal performance in various object detection
+tests. It is also widely used in real-world applications, such
+as video surveillance, self-driving cars, and augmented
+reality. YOLO can process images in real time, ideal for
+applications that require speed. It achieved high accuracy
+in various object detection tests. This is a lightweight
+model that can be deployed on a variety of devices,
+including mobile phones and embedded systems. It can be
+used to detect various objects including people, vehicles,
+animals, and traffic signs.
+A. YOLOv1
+YOLOv1 is the first version of the YOLO object
+detection algorithm. Released in 2016, this algorithm was
+the first real-time object detection algorithm to achieve the
+highest accuracy. YOLOv1 introduced a ground-breaking
+approach to object detection by simultaneously predicting
+bounding boxes for multiple object classes within a grid. It
+divided the input image into an S×S grid and predicted B
+bounding boxes per grid cell, each with confidence scores
+and class probabilities. The model architecture featured 24
+convolutional layers followed by two fully-connected
+layers, leveraging 1×1 convolutions to manage parameters
+effectively. YOLOv1's training involved pre-training initial
+layers on [2] ImageNet data and fine-tuning with [3]
+PASCAL VOC datasets at a higher resolution [4]. It
+employed a unique loss function that weighted
+localization, confidence, and classification errors, aiming
+for accurate object detection. YOLOv1 excelled in realtime performance but faced limitations in handling nearby
+objects, objects with uncommon aspect ratios, and learning
+fine-grained features due to down-sampling layers.
+B. YOLOv2
+In 2017, YOLOv2, a significant advancement in object
+detection, expanded its wide-range detection capabilities to
+9,000 categories. The basic architecture used by YOLOv2
+is called Darknet-19 [5]. Key enhancements include batch
+normalization on convolutional layers to improve
+convergence and regularization. It introduces a highresolution classifier by fine-tuning ImageNet to 448 x 448
+resolutions, thereby improving performance on highresolution inputs [6]. YOLOv2 adopts a fully
+convolutional architecture, eliminating dense layers for
+efficiency. Anchor boxes are used to predict bounding
+boxes, with multiple anchor points per grid cell to predict
+coordinates and layers. Dimensional clustering optimized
+the priorities via k-means clustering, selecting five
+priorities to balance. YOLOv2 directly predicts the
+coordinates corresponding to the grid cells, generating five
+bounding boxes for each cell. It has improved features by
+using multi-scale training and transfer layer to ensure
+robustness to different input sizes. [6] These improvements
+pushed YOLOv2 to an impressive average accuracy of
+78.6% on [3]PASCAL VOC2007, surpassing YOLOv1's
+63.4%. The Darknet-19 architecture has 19 convolutional
+layers [5], 1x1 convolutional layers for parameter
+reduction and batch normalization for regularization,
+delivering both speed and performance.
+C. YOLOv3
+YOLOv3, introduced in 2018, represents a significant
+evolution in real-time object detection. It introduces
+important changes compared to YOLOv2, including
+prediction of four bounding box coordinates (tx, ty, tw, th)
+as well as objective scores using logistic regression.
+YOLOv3 assigns a unique anchor box to each underlying
+fact object, and if left unspecified, only classification will
+be lost. Class prediction was converted to binary crossentropy for multi-label classification, allowing multiple
+labels for a box. [7] YOLOv3 adopted a larger base
+architecture called Darknet-53 [8], which consists of 53
+convolutional layers with residual connections and step
+convolutions. A modified SPP (Spatial Pyramid Pooling)
+block has been added to the backbone, improving
+performance. Multi-scale prediction has been introduced,
+providing finer object detail and better detection of small
+objects. The architecture also uses k-means clustering for
+the sections before the anchor box, using three priors for
+different scales. [7] YOLOv3 achieved industry-leading
+results on the COCO dataset, with YOLOv3-spp showing
+an AP of 36.2% and AP50 of 60.6% at 20 FPS, marking a
+significant advancement in object detection of real-time
+images.
+D. YOLOv4
+YOLOv4, which introduced its open-source, realtime, one-shot object detection philosophy in April 2020,
+was quickly adopted as the official YOLOv4 due to its
+significant improvements. He sought a balance between
+innovations classified as “bags of freebies” (BoF) and
+“bags of specialties” (BoS). BoF changed the training
+strategy, increasing costs without affecting inference time
+through data augmentation. BoS methods slightly increase
+inference cost but significantly improve accuracy,
+including receptive field expansion, feature fusion, and
+post-processing techniques. YOLOv4 incorporates a
+modified Darknet-53 architecture with partial inter-phase
+connections (CSPNet) and Mish activation functionality as
+its backbone [8]. The neck has a modified version of the
+Spatial Pyramid Pool (SPP), Multi-Scale Prediction, Path
+Aggregation Network (PANet), and Spatial Attention
+Module (SAM) [9] [10] [11] [12]. Sensor head policy uses
+anchor. [13] The CSPDarknet53-PANet-SPP model
+optimizes the calculation while maintaining accuracy.
+Training improvements include layer augmentation,
+DropBlock regularization, layer label smoothing, CIoU
+Proceedings of the International Conference on Self Sustainable Artificial Intelligence Systems (ICSSAS 2023)
+IEEE Xplore Part Number: CFP22DN7-ART; ISBN: 979-8-3503-0085-7
+979-8-3503-0085-7/23/$31.00 ©2023 IEEE 493
+Authorized licensed use limited to: California State University Fullerton. Downloaded on September 04,2025 at 21:45:54 UTC from IEEE Xplore. Restrictions apply.
+loss, and small batch normalization (CmBN). Selfadversarial training (SAT) improved strength. Genetic
+algorithms and optimized hyper parameters of the cosine
+are annealing planner. YOLOv4 achieved an AP of 43.5%
+and an AP50 of 65.7% on the MS COCO test-dev 2017
+dataset, demonstrating a significant performance increase
+[14].
+E. YOLOv5
+YOLOv5, introduced in 2020, maintained by
+Ultralytics [15], represents the latest evolution of the
+YOLO (You Only Look Once) family. Notably, although
+YOLOv5 was launched without scientific articles, it has
+been widely adopted thanks to its strong performance and
+user-friendly approach. YOLOv5 is built on the
+improvements of YOLOv4, with the special feature of
+being developed on PyTorch, making it more accessible to
+users. The YOLOv5 framework provides five scalable
+versions (YOLOv5n, YOLOv5s, YOLOv5m, YOLOv5l
+and YOLOv5x), meeting different needs and resource
+constraints. Ultralytics actively maintains and supports
+YOLOv5, providing integrations for labelling, training,
+and deployment, as well as mobile versions for iOS and
+Android. In terms of performance, [16] YOLOv5x
+achieves an outstanding average precision (AP) of 50.7%
+in the 2017 test split of the MS COCO dataset with an
+image size of 640 pixels [14]. It excels in real-time
+applications, delivering up to 200 frames per second from
+a highly configurable GPU with a batch size of 32.
+Additionally, by using input sizes larger than 1536 pixels,
+YOLOv5 pushes Its AP is up 55.8%, highlighting his
+versatility and ability.
+F. YOLOv6
+YOLOv6 was released by Meituan Vision AI
+department on ArXiv in September 2022. It provides
+different models with different sizes for industrial
+applications. YOLOv6 used an anchorless detector. The
+main new features of this model are: [17]The new
+RepVGG-based backbone called EfficiencyRep uses
+greater parallelism than previous YOLO backbones. For
+the neck, they use PAN enhanced with RepBlocks or
+CSPStackRep blocks for larger models [17]. And inspired
+by YOLOX, they developed an effective decoupling head.
+Label using task-appropriate learning methods introduced
+in TOOD. They used VariFocal loss classifier and
+SIOU/GIoU regression loss of self-distillation strategy for
+regression and classification tasks. Quantification scheme
+for detection using RepOptimizer and per-channel
+distillation for faster detection [18] . YOLOv6 results
+evaluated on MS COCO 2017 Developer Test Dataset,
+YOLOv6-L achieved 52.5% AP and 70% AP50 at ~50 FPS
+on NVIDIA Tesla T4.
+G. YOLOv7
+YOLOv7, introduced in July 2022 by the creators of
+YOLOv4 and YOLOR, sets new standards in object
+detection speed and accuracy, from 5 to 160 FPS. Trained
+exclusively on the MS COCO dataset without a pre-trained
+framework, YOLOv7 combines architectural
+enhancements and a freeware suite to improve accuracy
+without compromising speed deductive. Key architectural
+changes include the introduction of Extensible Efficient
+Layer Aggregation Networks (E-ELAN), gradient path
+optimization for deep models, and model scaling for on
+concatenation, ensuring balanced adjustment of properties
+during scaling. [19] Interesting features in YOLOv7
+include planned re-parameterized convolution
+(RepConvN), coarse label assignment to sub-heads, batch
+normalization in transformation activation, YOLORinspired tacit knowledge and an exponential moving
+average for the final inference model. When tested on the
+2017 developer testbed of the MS COCO dataset, [18]
+YOLOv7-E6 achieved an impressive AP of 55.9% and
+AP50 of 73.5% with an input size of 1280 pixels, yielding
+Fast 50 FPS performance on NVIDIA V100.
+III. METHODOLOGY
+In this section, we describe our methodology. Our
+main goal is to identify recyclable waste for reuse. To
+achieve this, we used YOLOv8, a model that does not rely
+on anchor boxes. We randomly select batches of labelled
+training images from WaRP Dataset, start the training
+process, and extract features from these images. These
+characteristics are then used to detect and classify
+recyclable materials.
+A. Dataset
+WaRP, short for Waste Recycling Plant Dataset, is a
+carefully curated collection of labelled images taken at an
+industrial waste sorting plant. This dataset is a valuable
+asset adapted for machine learning and computer vision
+applications, with a special focus on waste classification
+and recycling. What sets WaRP apart from many other
+datasets is its unique features and broad coverage of waste
+categories.
+Fig 1. Distinct 28 object classes available in dataset
+Proceedings of the International Conference on Self Sustainable Artificial Intelligence Systems (ICSSAS 2023)
+IEEE Xplore Part Number: CFP22DN7-ART; ISBN: 979-8-3503-0085-7
+979-8-3503-0085-7/23/$31.00 ©2023 IEEE 494
+Authorized licensed use limited to: California State University Fullerton. Downloaded on September 04,2025 at 21:45:54 UTC from IEEE Xplore. Restrictions apply.
+[20] WaRP is thoughtfully divided into five main
+sections: Bottles, Carton, Detergent, Canisters and Cans,
+divided into 28 separate categories. Among them there are
+17 categories of plastic bottles marked with the prefix
+"bottle" and three glass bottle types with the prefix "glass".
+Cardboard is classified into two categories and four
+categories include detergents and cans and cans. Some
+items in the dataset are marked with the suffix "-full" to
+indicate that these bottles are filled with air, distinguishing
+them from flat bottles.
+ Fig 2. Class Object organisation in WaRP-D dataset
+A characteristic of the WaRP dataset is its realism and
+representation of challenging real-world scenarios. The
+images in this dataset accurately represent conditions
+where objects often overlap, change significantly, or
+encounter difficult lighting conditions. This realistic aspect
+is important for training and rigorous evaluation of
+machine learning models, especially those designed to
+classify litter in less-than-ideal environments. [20] Warp's
+main component, WaRP-D, contains a significant number
+of images for training and validation. It provides 2452
+training images to build robust waste sorting models and
+522 additional validation images for performance
+evaluation. Each Warp image has a high-definition
+resolution of 1920x1080 pixels, providing a detailed visual
+representation of waste at recycling sites. This high
+resolution makes the dataset suitable for various computer
+vision and deep learning applications, especially those
+focused on accurate identification and efficient waste
+sorting.
+ Fig 3. Ratio of different classes in WaRP Dataset
+ Fig 4. Category wise count for different classes in WaRP Dataset
+B. Proposed Model
+We have implemented YOLOv8 model, introduced by
+Ultralytics on January 10, 2023. Building on the success of
+the YOLO model series, YOLOv8 stands out as an
+advanced model, delivering higher accuracy and detection
+speed than its predecessors, such as YOLOv5 and
+YOLOv7. Turning to the network architecture, YOLOv8's
+backbone closely resembles YOLOv5, with CSP replacing
+C3 modules. [21] [22] The popular SPPF module remains
+at the end of the backbone, ensuring accuracy across
+different scales. In the Neck section, PAN-FPN feature
+fusion effectively utilizes features from various scale
+layers. The Neck module incorporates multiple C2f
+modules and up-sampling layers alongside a decoupled
+head structure, achieving heightened accuracy.
+Fig 5. YOLOv8 architecture for object detection
+Backbone:
+The core of YOLOv8 is anchored in the modified
+CSPDarknet53 architecture and uses a multi-scale
+approach by scaling the input features into five distinct
+scales labelled B1 to B5. The original Cross Stage Partial
+(CSP) module is replaced by the C2f module, which
+features pass-through connections to improve information
+Proceedings of the International Conference on Self Sustainable Artificial Intelligence Systems (ICSSAS 2023)
+IEEE Xplore Part Number: CFP22DN7-ART; ISBN: 979-8-3503-0085-7
+979-8-3503-0085-7/23/$31.00 ©2023 IEEE 495
+Authorized licensed use limited to: California State University Fullerton. Downloaded on September 04,2025 at 21:45:54 UTC from IEEE Xplore. Restrictions apply.
+flow while maintaining a lightweight structure. The CBS
+module performs a convolution operation on the input
+data, followed by batch normalization and SiLU activation
+to produce the output. To scale output adaptively, the
+backbone uses the Spatial Pyramid Pooling Fast (SPPF)
+module. SPPF reduces computational cost and latency by
+sequentially connecting three max pooling layers.
+Neck:
+Inspired by PANet, [11] YOLOv8 integrates the
+PAN-FPN structure in the neck, optimizing feature fusion
+and localization. Notably, YOLOv8 streamlines the PAN
+structure by eliminating post-sampling convolution
+operations, thereby achieving model efficiency without
+compromising performance. The PAN-FPN configuration
+exploits two different feature scales, P4-P5 and N4-N5, in
+the PAN and FPN structures, respectively. By combining
+top-down and bottom-up approaches, PAN-FPN ensures
+feature diversity and completeness by combining deep
+semantic and shallow location information.
+Head:
+YOLOv8's detection component uses a split-head
+structure, with separate branches for object classification
+and prediction bounding box regression. Different loss
+functions are applied to these branches; with binary crossentropy loss (BCE loss) used for classification and
+distributed focus loss (DFL) as well as CIOU for bounding
+box regression [18]. This decoupled design improves
+detection accuracy and speeds up model convergence. The
+model uses a Task Specifier to dynamically assign
+samples.
+YOLOv8, an evolution of this technology, builds
+upon the successes of prior real-time object detectors.
+Drawing inspiration from YOLOv5, YOLOv8 integrates
+the CSP (Cross Stage Partial) concept, PAN-FPN feature
+fusion method, and the SPPF (Spatial Pyramid Pooling
+Fast) module [23] [24]. Its paramount innovation lies in
+introducing a cutting-edge State-of-the-Art (SOTA) model.
+This includes the integration of object detection networks
+operating at resolutions of P5 640 and P6 1280, alongside
+the YOLACT instance segmentation model. While
+preserving the foundational idea of YOLOv5, it adopts a
+C2f module inspired by YOLOv7's ELAN structure. [22]
+[25] In terms of loss functions, YOLOv8 employs BCE
+Loss for classification and introduces the CIOU Loss for
+regression. Additionally, it incorporates the DFL
+(Distribution Focal Loss) and VFL (Variable Focal Loss)
+mechanisms, enhancing focus on target locations and
+optimizing probability density near object positions. Let
+the network quickly focus on the distribution of the
+location close to the target location, and make the
+probability density near the location as large as possible, as
+shown in formula (1). si is the output of sigmoid for the
+network, yi and yi+1 are interval orders, y is label.
+Compared to the previous YOLO algorithm, YOLOv8 is
+very extensible. It is a framework that can support
+previous versions of YOLO, and can switch between
+different versions, so it is easy to compare the performance
+of different versions.
+DFL(si , si + 1)=-(( yi + 1 -y)*log(si)+(y – yi)*log (si+1 ) ) (1)
+ Notably, YOLOv8 transitions from Anchor-Based to
+Anchor-Free detection and adopts a dynamic Task-Aligned
+Assigner strategy. [22] [25] This strategy calculates
+alignment degrees for each instance based on a formula
+involving classification scores, IOU values, and weighted
+hyper parameters. It calculates the alignment degree of
+Anchor-level for each instance using Equation (2), s is the
+classification score, u is the IOU value, α and β are the
+weight hyper parameters. It selects m anchors with the
+maximum value (t) in each instance as positive samples,
+and selects the other anchors as negative samples, and then
+trains through the loss function. The outcome of these
+advancements is a YOLO model that outperforms
+YOLOv5 by approximately 1% in terms of accuracy,
+solidifying its position as one of the most precise object
+detectors available.
+ t = s . α * u . ß (2)
+Key to YOLOv8's appeal is its adaptability—it works
+seamlessly with various YOLO versions, making it a
+valuable tool for performance evaluation in the field of
+YOLO-based research.
+C. Model Implementation
+Proceedings of the International Conference on Self Sustainable Artificial Intelligence Systems (ICSSAS 2023)
+IEEE Xplore Part Number: CFP22DN7-ART; ISBN: 979-8-3503-0085-7
+979-8-3503-0085-7/23/$31.00 ©2023 IEEE 496
+Authorized licensed use limited to: California State University Fullerton. Downloaded on September 04,2025 at 21:45:54 UTC from IEEE Xplore. Restrictions apply.
+Fig 6. Waste detection process in YOLOv8
+Fig 7. YOLOv8s OUTPUT
+
+Fig 8. YOLOv8m OUTPUT
+Fig 9. YOLOv8L OUTPUT
+IV. RESULT DISCUSSION
+In a comprehensive experiment, we evaluated the
+performance of [16] YOLOv5 and YOLOv8 models on the
+same dataset, and interestingly, both models yielded
+similar results during training. However, it's noteworthy
+that YOLOv8 exhibited a more competitive performance
+overall. For our YOLOv5 experiments, we specifically
+utilized two variants: YOLOv5s and YOLOv5m. In
+contrast, for the YOLOv8 experiments, we employed a
+more extensive approach, encompassing three different
+model sizes: YOLOv8s, YOLOv8m, and YOLOv8l. This
+encompassed a spectrum of model weights, ranging from
+smaller to larger configurations. To rigorously assess the
+models, we compared their precision values and calculated
+the mean Average Precision (mAP) across various epochs
+within the same experiment. This meticulous evaluation
+allowed us to draw meaningful conclusions about the
+performance of these models in object detection tasks,
+taking into consideration both precision at individual time
+points and the overall quality of object detection across all
+epochs.
+A. YOLOv8s
+We start the training process using the YOLOv8s
+model. However, due to the lack of observable
+improvements over the past 20 epochs, we made the
+decision to end training early, as shown in Figure 7. For
+your information, we have compiled a detailed breakdown
+of the precision, recall, mAP50, and mAP50-95 values in
+Table 1, focusing on a specific set of 28 feature classes is
+the focus of this phase of training. These values provide a
+comprehensive evaluation of the performance of the
+YOLOv8 model in these classes. In a broader context, the
+YOLOv8s model demonstrated an impressive overall
+average accuracy (AP) of 51.20%. This figure summarizes
+the model's cumulative performance across all object
+classes in our dataset, highlighting its mastery of object
+detection tasks.
+Proceedings of the International Conference on Self Sustainable Artificial Intelligence Systems (ICSSAS 2023)
+IEEE Xplore Part Number: CFP22DN7-ART; ISBN: 979-8-3503-0085-7
+979-8-3503-0085-7/23/$31.00 ©2023 IEEE 497
+Authorized licensed use limited to: California State University Fullerton. Downloaded on September 04,2025 at 21:45:54 UTC from IEEE Xplore. Restrictions apply.
+Fig 10. Training results for YOLOv8s model.
+Table 1. Modal Summary which describe precision, recall and mean
+Average Precisions (mAP) during the training phase on YOLOv8s model.
+Class Precision Recall mAP50 mAP50-95
+bottle-blue 0.406 0.539 0.488 0.375
+bottle-green 0.692 0.605 0.694 0.542
+bottle-dark 0.793 0.678 0.787 0.608
+bottle-milk 0.506 0.597 0.53 0.417
+bottle-transp 0.506 0.481 0.493 0.366
+bottle-multicolor 0.442 0.25 0.189 0.163
+bottle-yogurt 0.595 0.333 0.401 0.315
+bottle-oil 0.209 0.137 0.183 0.141
+cans 0.581 0.492 0.544 0.385
+juice-cardboard 0.383 0.137 0.209 0.15
+milk-cardboard 0.31 0.348 0.346 0.273
+detergent-color 0.593 0.323 0.398 0.296
+detergenttransparent 0.361 0.235 0.25 0.205
+detergent-box 0.637 0.643 0.973 0.48
+canister 0.438 0.385 0.419 0.369
+bottle-blue-full 0.588 0.667 0.723 0.579
+bottle-transp-full 0.662 0.683 0.719 0.596
+bottle-dark-full 0.616 0.786 0.786 0.675
+bottle-green-full 0.609 0.815 0.778 0.648
+bottlemulticolorv-full 0.69 0.417 0.592 0.468
+bottle-milk-full 0.489 0.727 0.63 0.516
+bottle-oil-full 0.343 0.1 0.148 0.129
+detergent-white 0.514 0.397 0.449 0.363
+bottle-blue5l 0.674 0.63 0.633 0.495
+bottle-blue5l-full 0.661 0.651 0.692 0.617
+glass-transp 0.518 0.359 0.338 0.223
+glass-dark 0.604 0.375 0.564 0.306
+glass-green 0.604 0.548 0.669 0.443
+B. YOLOv8m
+We started the training process with the YOLOv8m
+model, achieving notable mAP50 values between 0.55 and
+0.58 over 100 epochs, as shown in Figure 8. In Table 2 you
+will find full details on the precision, recall, mAP50 and
+mAP50-95 values, with a specific focus on the 28 feature
+classes that were the main focus during the training phases.
+These values provide a detailed evaluation of the
+performance of the YOLOv8m model in these classes.
+From a broader perspective, the YOLOv8m model exhibits
+an impressive overall average accuracy (AP) of 55.47%.
+This metric covers the model's overall performance across
+all object classes in our dataset, highlighting the model's
+excellence in object detection tasks.
+Fig 11. Training results for YOLOv8m model.
+Table 2. Modal Summary which describes precision, recall and mean
+Average Precisions(mAP) during the training phase on YOLOv8m model.
+Class Precision Recall mAP50 mAP50-95
+bottle-blue 0.49 0.47 0.488 0.395
+bottle-green 0.715 0.663 0.725 0.576
+bottle-dark 0.794 0.713 0.811 0.655
+bottle-milk 0.498 0.4 0.494 0.418
+bottle-transp 0.588 0.498 0.531 0.429
+bottle-multicolor 0.453 0.292 0.292 0.265
+bottle-yogurt 0.536 0.44 0.413 0.345
+bottle-oil 0.38 0.275 0.275 0.225
+cans 0.697 0.464 0.595 0.43
+juice-cardboard 0.495 0.32 0.294 0.234
+milk-cardboard 0.433 0.405 0.39 0.325
+detergent-color 0.585 0.452 0.464 0.385
+detergent-transparent 0.404 0.203 0.235 0.188
+detergent-box 0.7174 0.714 0.764 0.644
+canister 0.529 0.538 0.576 0.531
+bottle-blue-full 0.608 0.667 0.71 0.548
+bottle-transp-full 0.637 0.762 0.738 0.622
+bottle-dark-full 0.592 0.75 0.793 0.696
+bottle-green-full 0.685 0.881 0.817 0.678
+bottle-ulticolorv-full 0.644 0.667 0.711 0.541
+bottle-milk-full 0.625 0.759 0.629 0.544
+bottle-oil-full 0.246 0.2 0.194 0.178
+detergent-white 0.538 0.5 0.536 0.442
+bottle-blue5l 0.62 0.556 0.606 0.509
+bottle-blue5l-full 0.436 0.733 0.708 0.616
+glass-transp 0.596 0.313 0.372 0.274
+glass-dark 0.842 0.499 0.665 0.477
+glass-green 0.794 0.613 0.673 0.455
+C. YOLOv8l
+We started the training process with the YOLOv8l
+model, achieving an exceptionally high mAP50 value,
+around 0.6, over 80 epochs, as Figure 9 illustrates. For
+your information, we have meticulously compiled a
+Proceedings of the International Conference on Self Sustainable Artificial Intelligence Systems (ICSSAS 2023)
+IEEE Xplore Part Number: CFP22DN7-ART; ISBN: 979-8-3503-0085-7
+979-8-3503-0085-7/23/$31.00 ©2023 IEEE 498
+Authorized licensed use limited to: California State University Fullerton. Downloaded on September 04,2025 at 21:45:54 UTC from IEEE Xplore. Restrictions apply.
+detailed breakdown of precision, recall, mAP50 and
+mAP50-95 values in Table 3. This table focuses
+specifically on 28 object classes is the main focus of this
+training phase, providing an in-depth evaluation of the
+performance of the YOLOv8l model in these classes. By
+zooming out to capture a broader context, the YOLOv8l
+model demonstrated an impressive overall average
+accuracy (AP) of 59.58%. This overall metric encapsulates
+the model's overall performance across all object classes in
+our dataset, confirming the model's excellence in the field
+of object detection.
+Fig 12. Training results for YOLOv8l model.
+Table 3. Modal Summary which describes precision, recall and mean
+Average Precisions(mAP) during the training phase on YOLOv8l model.
+Class Precision Recall mAP50 mAP50-95
+bottle-blue 0.52 0.539 0.572 0.464
+bottle-green 0.672 0.644 0.749 0.611
+bottle-dark 0.841 0.735 0.811 0.655
+bottle-milk 0.594 0.433 0.546 0.463
+bottle-transp 0.655 0.509 0.568 0.453
+bottle-multicolor 0.413 0.208 0.237 0.208
+bottle-yogurt 0.758 0.422 0.538 0.437
+bottle-oil 0.491 0.353 0.349 0.279
+cans 0.743 0.444 0.622 0.455
+juice-cardboard 0.512 0.28 0.39 0.292
+milk-cardboard 0.444 0.424 0.377 0.302
+detergent-color 0.478 0.355 0.451 0.376
+detergenttransparent 0.503 0.338 0.326 0.268
+detergent-box 0.778 0.725 0.865 0.71
+canister 0.467 0.615 0.576 0.501
+bottle-blue-full 0.716 0.698 0.743 0.624
+bottle-transp-full 0.639 0.762 0.767 0.655
+bottle-dark-full 0.661 0.587 0.85 0.735
+bottle-green-full 0.714 0.881 0.836 0.724
+bottlemulticolorv-full 0.827 0.792 0.852 0.686
+bottle-milk-full 0.423 0.653 0.615 0.522
+bottle-oil-full 0.382 0.2 0.212 0.194
+detergent-white 0.668 0.546 0.548 0.451
+bottle-blue5l 0.607 0.631 0.639 0.523
+bottle-blue5l-full 0.488 0.8 0.804 0.715
+glass-transp 0.644 0.303 0.384 0.276
+glass-dark 0.876 0.5 0.73 0.508
+glass-green 0.825 0.61 0.732 0.528
+D. Result comparison
+YOLOv8s: This is the smallest variant of YOLOv8,
+with a moderate mAP0.5 of 0.512 and a relatively fast
+average inference time of 3.00ms. It strikes a balance
+between accuracy and speed. YOLOv8m is the mediumsized variant, YOLOv8m, achieves a higher mAP0.5 of
+0.5547 but requires a slightly longer average inference
+time of 6.00ms. YOLOv8l is the largest and most complex
+variant, providing the highest mAP0.5 of 0.5958.
+However, this comes at the cost of a longer average
+inference time of 9.20ms.
+Table 4. comparison among YOLOv5 and YOLOv8 models with different
+weights in terms of best training iterations (epochs) and mean average
+precision (mAP) with their average inference time.
+Model Weights epochs mAP0.5 mAP@0.5:0.95
+average inference
+time(millisecond)
+YOLOv8 YOLOv8s 48 0.512 0.3983 3.00
+YOLOv8m 100 0.5547 0.4508 6.00
+YOLOv8l 80 0.5958 0.4860 9.20
+The scatter plot aids to visualize and compare the
+mAP50 (mean average precision at threshold 50 IoU)
+values for three different variants of the YOLOv8 model:
+YOLOv8, YOLOv8m and YOLOv8l. This allows a visual
+assessment of the model's performance with respect to
+these variations.
+Fig 13. Relationship among 3 distinct YOLOv8 weights in terms of
+mAP50
+V. CONCLUSION
+This article presents a new application of the
+YOLOv8 algorithm, to improve the ability to intelligently
+classify and manage urban waste. The neural network was
+trained on a custom dataset of 2,452 images from a waste
+recycling plant, focusing on detecting 28 different types of
+waste. The test results illustrate the effectiveness of our
+method of classifying waste into five distinct groups:
+Bottles, cans, cans, cardboard, and detergents. In
+particular, our system allows for almost real-time waste
+detection. Comparative evaluations between the
+YOLOv8s, YOLOv8m and YOLOv8l models highlight the
+effectiveness of YOLOv8 in waste classification. However,
+due to limitations in the size of our training dataset, the
+YOLOv8l and YOLOv8m models did not yield
+significantly improved results compared to YOLOv8s.
+Therefore, future research will require larger data sets to
+improve the accuracy and precision of detection. In
+conclusion, our comparative analysis of the YOLOv8s,
+YOLOv8m, and YOLOv8l models quantifies the trade-off
+between precision and speed. Additionally, this research
+recognizes the complexity of detecting junk images,
+Proceedings of the International Conference on Self Sustainable Artificial Intelligence Systems (ICSSAS 2023)
+IEEE Xplore Part Number: CFP22DN7-ART; ISBN: 979-8-3503-0085-7
+979-8-3503-0085-7/23/$31.00 ©2023 IEEE 499
+Authorized licensed use limited to: California State University Fullerton. Downloaded on September 04,2025 at 21:45:54 UTC from IEEE Xplore. Restrictions apply.
+especially when objects are made from multiple materials
+or may include components from other layers. Although
+our approach focuses on parent classes and tangible
+categories, it paves the way for further research to improve
+waste classification based on material properties.
+Additionally, our waste sorting strategy shows promise in
+improving waste disposal and recycling practices. Future
+work will focus on optimizing prediction and probabilistic
+results for other real-world wastes other than former 28
+classes.
+REFERENCES
+[1] S. a. Y. Kumar, "A novel yolov3 algorithm-based deep learning
+approach for waste segregation: Towards smart waste management,"
+MDPI, p. 14, 2020.
+[2] Y. a. Z. Z. a. H. You, Imagenet training in minutes, Proceedings of
+the 47th International Conference on Parallel Processing, 2018.
+[3] S. a. C. J. a. A. L. a. B. J. Vicente, Reconstructing pascal voc,
+Proceedings of the IEEE conference on computer vision and pattern
+recognition, 2014.
+[4] M. Shenoda, "Real-time Object Detection: YOLOv1 ReImplementation in PyTorch," arXiv preprint arXiv:2305.17786, p. 4,
+2023.
+[5] Z. A. a. S. H. a. A. Choudhry, "DarkNet-19 Based Intelligent
+Diagnostic System for Ocular Diseases," Iranian Journal of Science
+and Technology, Transactions of Electrical Engineering, pp. 959-
+970, 2022.
+[6] J. a. F. A. Redmon, YOLO9000: better, faster, stronger, 7263-7271:
+Proceedings of the IEEE conference on computer vision and pattern
+recognition, 2017.
+[7] J. a. F. A. Redmon, "Yolov3: An incremental improvement," arXiv
+preprint arXiv:1804.02767, p. 6, 2018.
+[8] D. a. R. U. Pathak, "Content-based image retrieval using group
+normalized-inception-darknet-53," International Journal of
+Multimedia Information Retrieval, pp. 155-170, 2021.
+[9] K. a. Z. X. a. R. S. a. S. J. He, "Spatial pyramid pooling in deep
+convolutional networks for visual recognition," IEEE transactions on
+pattern analysis and machine intelligence, pp. 1904-1916, 2015.
+[10] G. a. Z. Y. a. S. Sun, "Multi-scale prediction of the effective chloride
+diffusion coefficient of concrete," Construction and Building
+Materials, pp. 3820-3831, 2011.
+[11] S. a. Q. L. a. Q. H. a. S. J. a. J. J. Liu, Path aggregation network for
+instance segmentation, Proceedings of the IEEE conference on
+computer vision and pattern recognition, 2018.
+[12] Y. a. F. M. a. W. N. Zhang, "Channel-spatial attention network for
+fewshot classification," Plos one, p. 16, 2019.
+[13] A. a. W. C.-Y. a. L. H.-Y. M. Bochkovskiy, "Yolov4: Optimal speed
+and accuracy of object detection," arXiv preprint arXiv:2004.10934,
+p. 17, 2020.
+[14] T.-Y. a. M. M. a. B. Lin, Microsoft coco: Common objects in
+context, Computer Vision--ECCV 2014: 13th European Conference,
+2014.
+[15] G. a. C. A. a. S. Jocher, "ultralytics/yolov5: v6. 1-TensorRT,
+TensorFlow edge TPU and OpenVINO export and inference,"
+Zenodo, 2022.
+[16] S. a. L. G. a. J. Z. a. H. L. Tan, Improved YOLOv5 network model
+and application in safety helmet detection, 2021 IEEE International
+Conference on Intelligence and Safety for Robotics (ISR), 2021.
+[17] X. a. Z. X. a. M. Ding, Repvgg: Making vgg-style convnets great
+again, Proceedings of the IEEE/CVF conference on computer vision
+and pattern recognition, 2021.
+[18] M. Hussain, "YOLO-v1 to YOLO-v8, the Rise of YOLO and Its
+Complementary Nature toward Digital Manufacturing and Industrial
+Defect Detection," MDPI, p. 677, 2023.
+[19] G. a. M. G. a. H. M. Yasmine, Overview of single-stage object
+detection models: from Yolov1 to Yolov7, 2023 International
+Wireless Communications and Mobile Computing (IWCMC), 2023.
+[20] N. Z. A. S. R. F. M. K. V. K. Dmitry Yudin, WaRP - Waste Recycling
+Plant Dataset, Kaggle, 2023.
+[21] Z. a. L. L. a. S. P. Wang, "Smoking behavior detection algorithm
+based on YOLOv8-MNC," Frontiers in Computational
+Neuroscience, p. 14, 2023.
+[22] B. a. N. M. a. Y. W. Q. Xiao, "Fruit ripeness identification using
+YOLOv8 model," Multimedia Tools and Applications, p. 18, 2023.
+[23] C. a. C. R.-C. Dewi, "Automatic medical face mask detection based
+on cross-stage partial network to Combat covid-19," Big Data and
+Cognitive Computing, p. 106, 2022.
+[24] K. a. Z. X. a. R. S. a. S. J. He, "Spatial pyramid pooling in deep
+convolutional networks for visual recognition," IEEE transactions on
+pattern analysis and machine intelligence, pp. 1904-1916, 2015.
+[25] H. a. D. X. a. G. Lou, "DC-YOLOv8: Small-Size Object Detection
+Algorithm Based on Camera Sensor," MDPI, p. 2323, 2023.
+Proceedings of the International Conference on Self Sustainable Artificial Intelligence Systems (ICSSAS 2023)
+IEEE Xplore Part Number: CFP22DN7-ART; ISBN: 979-8-3503-0085-7
+979-8-3503-0085-7/23/$31.00 ©2023 IEEE 500
+Authorized licensed use limited to: California State University Fullerton. Downloaded on September 04,2025 at 21:45:54 UTC from IEEE Xplore. Restrictions apply. 
+
