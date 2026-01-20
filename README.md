@@ -1,73 +1,56 @@
-# Welcome to your Lovable project
+# Akshat Desai | AI & Computer Vision Portfolio
 
-## Project info
+![Portfolio Preview](public/placeholder.svg)
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+**Live Site:** [https://akshat-desai-portfolio.vercel.app](https://akshat-desai-portfolio.vercel.app)
 
-## How can I edit this code?
+## 👋 About
+Welcome to my personal portfolio repo. I built this site to showcase my work in **Computer Vision, Medical Imaging, and Hardware-Integrated AI**—and to prove that engineering portfolios don't have to be boring static pages.
 
-There are several ways of editing your application.
+It's designed with a "glassmorphism" aesthetic and features interactive architecture diagrams that explain *how* my systems work, not just *what* they do.
 
-**Use Lovable**
+## 🛠️ Under the Hood
+I engineered this site for performance and scalability using modern web standards:
+* **Core:** React 18 + Vite (for lightning-fast HMR and builds)
+* **Type Safety:** TypeScript (strict mode)
+* **Styling:** Tailwind CSS (utility-first architecture)
+* **Motion:** Framer Motion (GPU-accelerated animations)
+* **CI/CD:** Vercel (automated deployments on push)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## 📂 Featured Systems
+* **Alzheimer's Disease Analysis:** A scalable pipeline processing 1,231+ MRI subjects on HPC clusters.
+* **Lightwall Art Installation:** The "brain" behind a physical art piece, synchronizing 12 motors with Llama 3.2 in real-time.
+* **Dining Staffing Prediction:** An enterprise dashboard combining LightGBM forecasting with an AWS Bedrock agent.
+* **Verilog AI Assistant:** A self-correcting code generation tool that fixes its own syntax errors.
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🏃‍♂️ Run Locally
+Want to see how I built it? Feel free to clone and explore:
 
-**Use your preferred IDE**
+1. **Clone the repo**
+   ```bash
+   git clone [https://github.com/Akshat1661/akshat-desai-portfolio.git](https://github.com/Akshat1661/akshat-desai-portfolio.git)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+2. **Install dependencies**
+    ```bash
+    npm install
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+3. **Start development server**
+    ``bash
+    npm run dev
 
-Follow these steps:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 📬 Contact
+* **Email:** akshat.desai.754@gmail.com
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+* **LinkedIn:** linkedin.com/in/akshat-desai
 
-# Step 3: Install the necessary dependencies.
-npm i
+* **GitHub:** github.com/Akshat1661
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
 
-**Edit a file directly in GitHub**
+### Then run these 3 commands to push it:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+    ```powershell
+    git add README.md
+    git commit -m "Fix README formatting"
+    git push
 
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
