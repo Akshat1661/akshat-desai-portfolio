@@ -1,13 +1,11 @@
 # Akshat Desai | AI & Computer Vision Portfolio
 
-![Portfolio Preview](public/placeholder.svg)
-
 **Live Site:** [https://akshat-desai-portfolio.vercel.app](https://akshat-desai-portfolio.vercel.app)
 
 ## 👋 About
 Welcome to my personal portfolio repo. I built this site to showcase my work in **Computer Vision, Medical Imaging, and Hardware-Integrated AI**—and to prove that engineering portfolios don't have to be boring static pages.
 
-It's designed with a "glassmorphism" aesthetic and features interactive architecture diagrams that explain *how* my systems work, not just *what* they do.
+It's designed with a "glassmorphism" aesthetic and features interactive system architecture diagrams that explain *how* my systems work, not just *what* they do.
 
 ## 🛠️ Under the Hood
 I engineered this site for performance and scalability using modern web standards:
@@ -29,7 +27,7 @@ Want to see how I built it? Feel free to clone and explore:
 1. **Clone the repo**
    ```bash
    git clone [https://github.com/Akshat1661/akshat-desai-portfolio.git](https://github.com/Akshat1661/akshat-desai-portfolio.git)
-
+   
 2. **Install dependencies**
     ```bash
     npm install
