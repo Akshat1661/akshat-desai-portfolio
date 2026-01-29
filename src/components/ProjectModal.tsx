@@ -88,7 +88,7 @@ export const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) =>
                       <div className="w-1 h-6 bg-gradient-to-b from-blue-400 to-purple-400 rounded-full" />
                       <h3 className="text-2xl font-bold text-white">Performance Metrics</h3>
                     </div>
-                    
+
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       {project.performanceMetrics.map((metric, idx) => (
                         <motion.div
@@ -99,13 +99,22 @@ export const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) =>
                           whileHover={{ scale: 1.05, y: -5 }}
                           className="group relative"
                         >
-                          {/* Card Background Glow */}
-                          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                          
-                          <div className="relative bg-white/5 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/10 hover:border-white/40 transition-all duration-300">
+                          {/* Card Background Glow - Conditional for Highlight */}
+                          <div className={`absolute inset-0 rounded-2xl blur-lg transition-opacity duration-300 ${metric.highlight
+                            ? "bg-gradient-to-br from-amber-500/20 to-orange-500/20 opacity-100"
+                            : "bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100"
+                            }`} />
+
+                          <div className={`relative backdrop-blur-md border rounded-2xl p-6 transition-all duration-300 ${metric.highlight
+                            ? "bg-amber-500/10 border-amber-500/30 hover:bg-amber-500/20 hover:border-amber-500/50"
+                            : "bg-white/5 border-white/20 hover:bg-white/10 hover:border-white/40"
+                            }`}>
                             {/* Metric Value - Large & Bold */}
                             <div className="mb-3">
-                              <p className="text-3xl md:text-4xl font-black bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                              <p className={`text-3xl md:text-4xl font-black bg-clip-text text-transparent ${metric.highlight
+                                ? "bg-gradient-to-r from-amber-200 via-orange-400 to-amber-200"
+                                : "bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400"
+                                }`}>
                                 {metric.value}
                               </p>
                             </div>
@@ -144,55 +153,36 @@ export const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) =>
                     </div>
 
                     {/* Wrapped Flow Diagram */}
-                    <div className="flex flex-wrap justify-center items-center gap-4 p-6 bg-white/5 rounded-2xl border border-white/10">
-                      {project.architectureDiagram.map((step, idx) => (
-                        <motion.div
-                          key={idx}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: idx * 0.08 }}
-                          className="flex items-center gap-4"
-                        >
-                          {/* Architecture Step - Block Card */}
-                          <motion.div
-                            whileHover={{ scale: 1.08, y: -5, boxShadow: "0 20px 25px -5px rgba(96, 165, 250, 0.3)" }}
-                            className="group relative flex-shrink-0"
-                          >
-                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-                            
-                            <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border border-white/20 rounded-lg px-5 py-3 hover:bg-white/15 hover:border-white/40 transition-all duration-300 whitespace-nowrap shadow-md">
-                              <p className="text-xs md:text-sm font-bold text-blue-200 text-center">
-                                {step}
-                              </p>
-                            </div>
-                          </motion.div>
-
-                          {/* Arrow Between Steps */}
-                          {idx < project.architectureDiagram.length - 1 && (
+                    {/* Wrapped Flow Diagram */}
+                    {Array.isArray(project.architectureDiagram) && project.architectureDiagram.length > 0 ? (
+                      <div className="flex flex-wrap justify-center items-center gap-4 p-6 bg-white/5 rounded-2xl border border-white/10 overflow-x-auto">
+                        {project.architectureDiagram.map((step, idx) => (
+                          <div key={idx} className="flex items-center">
+                            {/* Step Card */}
                             <motion.div
-                              initial={{ opacity: 0, scale: 0.5 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ delay: idx * 0.08 + 0.1 }}
-                              className="flex-shrink-0 hidden sm:flex"
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: idx * 0.1 }}
+                              className="bg-gray-800/50 border border-gray-700 p-3 rounded-lg text-sm text-center min-w-[120px] text-gray-200"
                             >
-                              <ArrowRight size={24} className="text-blue-400" strokeWidth={2.5} />
+                              {step}
                             </motion.div>
-                          )}
 
-                          {/* Mobile Arrow Down - Only show on very small screens when multiple rows */}
-                          {idx < project.architectureDiagram.length - 1 && idx % 3 === 2 && (
-                            <motion.div
-                              initial={{ opacity: 0, scale: 0.5 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ delay: idx * 0.08 + 0.1 }}
-                              className="flex-shrink-0 sm:hidden w-full text-center"
-                            >
-                              <ArrowDown size={24} className="text-blue-400 mx-auto" strokeWidth={2.5} />
-                            </motion.div>
-                          )}
-                        </motion.div>
-                      ))}
-                    </div>
+                            {/* Arrow (only if not last item) */}
+                            {idx < project.architectureDiagram.length - 1 && (
+                              <div className="text-gray-500 mx-2">
+                                <ArrowRight size={20} className="hidden sm:block" />
+                                <ArrowDown size={20} className="block sm:hidden my-2" />
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="p-6 bg-white/5 rounded-2xl border border-white/10 text-center">
+                        <p className="text-gray-400 italic">No architecture diagram available.</p>
+                      </div>
+                    )}
 
                     {/* Architecture Flow Description */}
                     <p className="text-xs text-gray-500 mt-4 text-center italic">
@@ -238,7 +228,7 @@ export const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) =>
                         >
                           {/* Gradient Line Indicator */}
                           <div className="absolute left-0 top-2 w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-400" />
-                          
+
                           <p className="text-gray-300 text-sm leading-relaxed">
                             {detail}
                           </p>
