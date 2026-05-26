@@ -24,33 +24,33 @@ export const SkillsSection = () => {
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
         variants={containerVariants}
       >
-        <motion.h2
-          variants={itemVariants}
-          className="text-4xl md:text-5xl font-bold text-white mb-16 text-center"
-        >
-          Technical <span className="text-blue-400">Arsenal</span>
-        </motion.h2>
+        <motion.div variants={itemVariants} className="text-center mb-14">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Technical Skills
+          </h2>
+          <div className="section-divider" />
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
           {categories.map((category) => (
             <motion.div
               key={category}
               variants={itemVariants}
-              whileHover={{ y: -4 }}
-              className="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-300 hover:border-blue-400/30 hover:shadow-lg hover:shadow-blue-500/20"
+              whileHover={{ y: -3 }}
+              className="p-6 rounded-2xl border border-white/[0.09] bg-zinc-950/80 backdrop-blur-md transition-all duration-300 hover:border-white/[0.18]"
             >
-              <h3 className="text-xl font-bold text-white mb-6">
+              <h3 className="text-sm font-semibold text-white/50 uppercase tracking-widest mb-5">
                 {category}
               </h3>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-2">
                 {portfolioData.skills[category].map((skill) => (
                   <span
                     key={skill}
-                    className="px-3 py-1.5 text-sm font-semibold rounded-lg bg-blue-500/10 text-blue-300 border border-blue-400/20 hover:bg-blue-500/20 hover:text-white hover:border-blue-400/40 transition-colors"
+                    className="px-3 py-1.5 text-sm font-medium rounded-lg bg-white/[0.05] text-white/60 border border-white/[0.09] hover:bg-white/[0.1] hover:text-white/85 transition-colors"
                   >
                     {skill}
                   </span>

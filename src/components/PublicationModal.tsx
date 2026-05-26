@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+﻿import { motion } from 'framer-motion';
 import { FileText, ExternalLink, Users, Calendar, BookOpen, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,16 +32,16 @@ export function PublicationModal({ publication, open, onClose }: PublicationModa
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-card/95 backdrop-blur-xl border-primary/20 p-0">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-card/95 backdrop-blur-xl border-white/[0.1] p-0">
         <div className="relative">
           {/* Header with gradient */}
-          <div className="bg-gradient-to-br from-primary/20 via-background to-background p-6 pb-4">
+          <div className="bg-zinc-950 p-6 pb-4">
             <DialogHeader>
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
-                  <FileText className="w-6 h-6 text-primary" />
+                <div className="w-12 h-12 rounded-xl bg-white/[0.08] flex items-center justify-center">
+                  <FileText className="w-6 h-6 text-white/60" />
                 </div>
-                <span className="px-3 py-1 text-xs font-medium rounded-full bg-primary/20 text-primary">
+                <span className="px-3 py-1 text-xs font-medium rounded-full bg-white/[0.08] text-white/60">
                   {publication.type}
                 </span>
               </div>
@@ -58,7 +58,7 @@ export function PublicationModal({ publication, open, onClose }: PublicationModa
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
             >
-              <h4 className="text-sm font-semibold text-primary mb-2 flex items-center gap-2">
+              <h4 className="text-sm font-semibold text-white/60 mb-2 flex items-center gap-2">
                 <Users size={16} />
                 Authors
               </h4>
@@ -72,12 +72,12 @@ export function PublicationModal({ publication, open, onClose }: PublicationModa
               transition={{ delay: 0.15 }}
               className="flex flex-wrap gap-4"
             >
-              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 border border-primary/10">
-                <BookOpen size={16} className="text-primary" />
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 border border-white/[0.08]">
+                <BookOpen size={16} className="text-white/60" />
                 <span className="text-sm font-medium">{publication.venue}</span>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 border border-primary/10">
-                <Calendar size={16} className="text-primary" />
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 border border-white/[0.08]">
+                <Calendar size={16} className="text-white/60" />
                 <span className="text-sm font-medium">{publication.year}</span>
               </div>
             </motion.div>
@@ -88,7 +88,7 @@ export function PublicationModal({ publication, open, onClose }: PublicationModa
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <h4 className="text-sm font-semibold text-primary mb-3 flex items-center gap-2">
+              <h4 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
                 <FileText size={16} />
                 Abstract
               </h4>
@@ -105,7 +105,7 @@ export function PublicationModal({ publication, open, onClose }: PublicationModa
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
             >
-              <h4 className="text-sm font-semibold text-primary mb-3 flex items-center gap-2">
+              <h4 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
                 <Tag size={16} />
                 Keywords
               </h4>
@@ -113,7 +113,7 @@ export function PublicationModal({ publication, open, onClose }: PublicationModa
                 {publication.keywords.map((keyword) => (
                   <span
                     key={keyword}
-                    className="px-3 py-1.5 text-sm rounded-lg bg-primary/10 text-primary border border-primary/20"
+                    className="px-3 py-1.5 text-sm rounded-lg bg-white/[0.05] text-white/60 border border-white/[0.1]"
                   >
                     {keyword}
                   </span>
@@ -128,8 +128,8 @@ export function PublicationModal({ publication, open, onClose }: PublicationModa
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                <h4 className="text-sm font-semibold text-primary mb-3">PDF Preview</h4>
-                <div className="rounded-xl overflow-hidden border border-primary/20 bg-background/50">
+                <h4 className="text-sm font-semibold text-white/60 mb-3">PDF Preview</h4>
+                <div className="rounded-xl overflow-hidden border border-white/[0.1] bg-background/50">
                   <iframe
                     src={publication.pdfUrl}
                     className="w-full h-[400px]"

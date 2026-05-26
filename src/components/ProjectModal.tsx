@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Cpu, Layers, TrendingUp, ArrowRight, ArrowDown } from "lucide-react";
+import { X, Cpu, Layers, GitBranch } from "lucide-react";
 import type { PortfolioData } from "@/data/portfolioData";
 
 type Project = PortfolioData["projects"][0];
@@ -23,187 +23,158 @@ export const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) =>
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50"
           />
 
           {/* Modal */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              initial={{ opacity: 0, scale: 0.97, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ duration: 0.3 }}
-              className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto pointer-events-auto rounded-3xl"
+              exit={{ opacity: 0, scale: 0.97, y: 16 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto pointer-events-auto rounded-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Glassmorphism Background with Glow */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl blur-2xl" />
-
-              <div className="relative bg-slate-950/95 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl">
-                {/* Animated Border Glow */}
-                <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent" />
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-pink-400 to-transparent" />
-                  <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-purple-400 to-transparent" />
-                </div>
+              <div className="relative bg-zinc-950 border border-white/[0.1] rounded-2xl shadow-2xl">
+                {/* Single thin top rule */}
+                <div className="absolute top-0 left-0 right-0 h-px bg-white/[0.1] rounded-t-2xl" />
 
                 {/* Header */}
-                <div className="sticky top-0 bg-slate-950/95 backdrop-blur-xl border-b border-white/10 p-8 rounded-t-3xl z-10">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-3">
-                        <motion.div
-                          whileHover={{ scale: 1.1, rotate: 10 }}
-                          className="w-14 h-14 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg"
-                        >
-                          <Cpu size={28} className="text-white" />
-                        </motion.div>
-                        <h2 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
+                <div className="sticky top-0 bg-zinc-950/98 backdrop-blur-xl border-b border-white/[0.08] px-8 py-6 rounded-t-2xl z-10">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-4 flex-1 min-w-0">
+                      <div className="w-10 h-10 rounded-xl bg-white/[0.07] border border-white/[0.1] flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Cpu size={18} className="text-white/50" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h2 className="text-2xl md:text-3xl font-bold text-white leading-snug mb-2">
                           {project.title}
                         </h2>
+                        <p className="text-white/45 text-sm leading-relaxed">
+                          {project.description}
+                        </p>
                       </div>
-                      <p className="text-gray-400 text-sm leading-relaxed">
-                        {project.description}
-                      </p>
                     </div>
 
-                    {/* Close Button */}
-                    <motion.button
-                      whileHover={{ scale: 1.1, rotate: 90 }}
-                      whileTap={{ scale: 0.95 }}
+                    {/* Close */}
+                    <button
                       onClick={onClose}
-                      className="ml-4 w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 border border-white/20 transition-colors flex-shrink-0"
+                      className="w-9 h-9 flex items-center justify-center rounded-lg bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] transition-colors flex-shrink-0"
                     >
-                      <X size={20} className="text-white" />
-                    </motion.button>
+                      <X size={16} className="text-white/60" />
+                    </button>
                   </div>
                 </div>
 
                 {/* Content */}
-                <div className="p-8 space-y-10">
-                  {/* Performance Metrics Grid */}
-                  <div>
-                    <div className="flex items-center gap-2 mb-6">
-                      <div className="w-1 h-6 bg-gradient-to-b from-blue-400 to-purple-400 rounded-full" />
-                      <h3 className="text-2xl font-bold text-white">Performance Metrics</h3>
-                    </div>
+                <div className="px-8 py-8 space-y-10">
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {/* Performance Metrics */}
+                  <div>
+                    <h3 className="text-base font-semibold text-white/70 uppercase tracking-widest text-xs mb-5">
+                      Performance Metrics
+                    </h3>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                       {project.performanceMetrics.map((metric, idx) => (
                         <motion.div
                           key={idx}
-                          initial={{ opacity: 0, y: 20 }}
+                          initial={{ opacity: 0, y: 12 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: idx * 0.05 }}
-                          whileHover={{ scale: 1.05, y: -5 }}
-                          className="group relative"
+                          transition={{ delay: idx * 0.04 }}
+                          className={`border rounded-xl p-5 transition-colors duration-200 ${
+                            metric.highlight
+                              ? "bg-white/[0.06] border-white/[0.18]"
+                              : "bg-white/[0.03] border-white/[0.09] hover:bg-white/[0.06] hover:border-white/[0.15]"
+                          }`}
                         >
-                          {/* Card Background Glow - Conditional for Highlight */}
-                          <div className={`absolute inset-0 rounded-2xl blur-lg transition-opacity duration-300 ${metric.highlight
-                            ? "bg-gradient-to-br from-amber-500/20 to-orange-500/20 opacity-100"
-                            : "bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100"
-                            }`} />
-
-                          <div className={`relative backdrop-blur-md border rounded-2xl p-6 transition-all duration-300 ${metric.highlight
-                            ? "bg-amber-500/10 border-amber-500/30 hover:bg-amber-500/20 hover:border-amber-500/50"
-                            : "bg-white/5 border-white/20 hover:bg-white/10 hover:border-white/40"
-                            }`}>
-                            {/* Metric Value - Large & Bold */}
-                            <div className="mb-3">
-                              <p className={`text-3xl md:text-4xl font-black bg-clip-text text-transparent ${metric.highlight
-                                ? "bg-gradient-to-r from-amber-200 via-orange-400 to-amber-200"
-                                : "bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400"
-                                }`}>
-                                {metric.value}
-                              </p>
-                            </div>
-
-                            {/* Metric Label */}
-                            <p className="text-gray-400 text-xs md:text-sm font-semibold mb-3">
-                              {metric.label}
-                            </p>
-
-                            {/* Trend Indicator */}
-                            <div className="flex items-center gap-1">
-                              {metric.trend.includes("↑") || metric.trend.includes("↓") ? (
-                                <>
-                                  <TrendingUp size={14} className={metric.trend.includes("↑") ? "text-green-400" : "text-amber-400"} />
-                                  <span className={`text-xs font-semibold ${metric.trend.includes("↑") ? "text-green-400" : "text-amber-400"}`}>
-                                    {metric.trend}
-                                  </span>
-                                </>
-                              ) : (
-                                <span className="text-xs font-semibold text-blue-300">
-                                  {metric.trend}
-                                </span>
-                              )}
-                            </div>
-                          </div>
+                          <p className="text-3xl md:text-4xl font-black text-white mb-2 leading-none">
+                            {metric.value}
+                          </p>
+                          <p className="text-white/45 text-xs font-medium mb-1.5">
+                            {metric.label}
+                          </p>
+                          <p className="text-white/25 text-xs">
+                            {metric.trend}
+                          </p>
                         </motion.div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Architecture Flowchart - Block Diagram Style */}
+                  {/* System Architecture */}
                   <div>
-                    <div className="flex items-center gap-2 mb-6">
-                      <div className="w-1 h-6 bg-gradient-to-b from-purple-400 to-pink-400 rounded-full" />
-                      <h3 className="text-2xl font-bold text-white">System Architecture</h3>
+                    <div className="flex items-center gap-2 mb-5">
+                      <GitBranch size={14} className="text-white/30" />
+                      <h3 className="text-xs font-semibold text-white/70 uppercase tracking-widest">
+                        System Architecture
+                      </h3>
                     </div>
 
-                    {/* Wrapped Flow Diagram */}
-                    {/* Wrapped Flow Diagram */}
                     {Array.isArray(project.architectureDiagram) && project.architectureDiagram.length > 0 ? (
-                      <div className="flex flex-wrap justify-center items-center gap-4 p-6 bg-white/5 rounded-2xl border border-white/10 overflow-x-auto">
-                        {project.architectureDiagram.map((step, idx) => (
-                          <div key={idx} className="flex items-center">
-                            {/* Step Card */}
-                            <motion.div
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: idx * 0.1 }}
-                              className="bg-gray-800/50 border border-gray-700 p-3 rounded-lg text-sm text-center min-w-[120px] text-gray-200"
-                            >
-                              {step}
-                            </motion.div>
+                      <div className="p-6 bg-white/[0.02] rounded-xl border border-white/[0.08]">
+                        <div className="flex flex-col items-center max-w-2xl mx-auto">
+                          {project.architectureDiagram.map((step, idx) => {
+                            const total = project.architectureDiagram.length;
 
-                            {/* Arrow (only if not last item) */}
-                            {idx < project.architectureDiagram.length - 1 && (
-                              <div className="text-gray-500 mx-2">
-                                <ArrowRight size={20} className="hidden sm:block" />
-                                <ArrowDown size={20} className="block sm:hidden my-2" />
+                            const bracketMatch = step.match(/^(.*?)\s*\[(.+)\]$/);
+                            const mainLabel = bracketMatch ? bracketMatch[1].trim() : step;
+                            const subDetail = bracketMatch ? bracketMatch[2].trim() : null;
+
+                            return (
+                              <div key={idx} className="flex flex-col items-center w-full">
+                                <motion.div
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: idx * 0.05 }}
+                                  className="w-full flex items-start gap-3 border border-white/[0.09] rounded-xl px-4 py-3 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/[0.16] transition-all duration-150"
+                                >
+                                  <span className="flex-shrink-0 w-5 h-5 rounded-full border border-white/[0.12] bg-white/[0.05] text-[10px] font-bold text-white/30 flex items-center justify-center mt-0.5">
+                                    {idx + 1}
+                                  </span>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-white/75 leading-snug">
+                                      {mainLabel}
+                                    </p>
+                                    {subDetail && (
+                                      <p className="text-xs text-white/35 mt-0.5 leading-relaxed">
+                                        {subDetail}
+                                      </p>
+                                    )}
+                                  </div>
+                                </motion.div>
+
+                                {idx < total - 1 && (
+                                  <div className="w-px h-4 bg-white/[0.1] my-0.5" />
+                                )}
                               </div>
-                            )}
-                          </div>
-                        ))}
+                            );
+                          })}
+                        </div>
                       </div>
                     ) : (
-                      <div className="p-6 bg-white/5 rounded-2xl border border-white/10 text-center">
-                        <p className="text-gray-400 italic">No architecture diagram available.</p>
+                      <div className="p-6 bg-white/[0.03] rounded-xl border border-white/[0.08] text-center">
+                        <p className="text-white/30 text-sm italic">No architecture diagram available.</p>
                       </div>
                     )}
-
-                    {/* Architecture Flow Description */}
-                    <p className="text-xs text-gray-500 mt-4 text-center italic">
-                      Data flows sequentially through each component for optimal processing
-                    </p>
                   </div>
 
-                  {/* Tech Stack */}
+                  {/* Technology Stack */}
                   <div>
                     <div className="flex items-center gap-2 mb-4">
-                      <Layers size={20} className="text-blue-400" />
-                      <h3 className="text-xl font-bold text-white">Technology Stack</h3>
+                      <Layers size={14} className="text-white/30" />
+                      <h3 className="text-xs font-semibold text-white/70 uppercase tracking-widest">
+                        Technology Stack
+                      </h3>
                     </div>
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-2">
                       {project.techStack.map((tech, idx) => (
                         <motion.span
                           key={idx}
-                          initial={{ opacity: 0, scale: 0.8 }}
+                          initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: 0.3 + idx * 0.05 }}
-                          className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-200 border border-blue-400/30 hover:border-blue-400/60 transition-colors"
+                          transition={{ delay: 0.2 + idx * 0.03 }}
+                          className="px-3.5 py-1.5 text-sm font-medium rounded-lg bg-white/[0.05] text-white/55 border border-white/[0.09] hover:bg-white/[0.09] hover:text-white/75 transition-colors"
                         >
                           {tech}
                         </motion.span>
@@ -211,57 +182,51 @@ export const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) =>
                     </div>
                   </div>
 
-                  {/* Technical Architecture Details */}
+                  {/* Technical Implementation */}
                   <div>
                     <div className="flex items-center gap-2 mb-4">
-                      <Cpu size={20} className="text-purple-400" />
-                      <h3 className="text-xl font-bold text-white">Technical Implementation Details</h3>
+                      <Cpu size={14} className="text-white/30" />
+                      <h3 className="text-xs font-semibold text-white/70 uppercase tracking-widest">
+                        Technical Implementation
+                      </h3>
                     </div>
-                    <div className="space-y-4">
+                    <div className="space-y-3 border-l border-white/[0.08] pl-5">
                       {project.technicalDetails.map((detail, idx) => (
-                        <motion.div
+                        <motion.p
                           key={idx}
-                          initial={{ opacity: 0, x: -20 }}
+                          initial={{ opacity: 0, x: -8 }}
                           animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.4 + idx * 0.05 }}
-                          className="relative pl-6"
+                          transition={{ delay: 0.3 + idx * 0.04 }}
+                          className="text-white/50 text-sm leading-relaxed"
                         >
-                          {/* Gradient Line Indicator */}
-                          <div className="absolute left-0 top-2 w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-400" />
-
-                          <p className="text-gray-300 text-sm leading-relaxed">
-                            {detail}
-                          </p>
-                        </motion.div>
+                          {detail}
+                        </motion.p>
                       ))}
                     </div>
                   </div>
 
-                  {/* Key Features */}
+                  {/* Key Achievements */}
                   <div>
-                    <h3 className="text-xl font-bold text-white mb-4">Key Achievements</h3>
-                    <div className="grid grid-cols-1 gap-3">
+                    <h3 className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-4">
+                      Key Achievements
+                    </h3>
+                    <div className="grid grid-cols-1 gap-2.5">
                       {project.keyFeatures.map((feature, idx) => (
                         <motion.div
                           key={idx}
-                          initial={{ opacity: 0, y: 10 }}
+                          initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.5 + idx * 0.05 }}
-                          className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                          transition={{ delay: 0.4 + idx * 0.04 }}
+                          className="flex gap-3 items-start px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.06] transition-colors"
                         >
-                          <div className="flex gap-3 items-start">
-                            <span className="text-green-400 font-bold text-lg flex-shrink-0">✓</span>
-                            <p className="text-gray-400 text-sm leading-relaxed">{feature}</p>
-                          </div>
+                          <span className="text-white/25 font-medium text-sm flex-shrink-0 mt-0.5">→</span>
+                          <p className="text-white/55 text-sm leading-relaxed">{feature}</p>
                         </motion.div>
                       ))}
                     </div>
                   </div>
-                </div>
 
-                {/* Decorative Corner Elements */}
-                <div className="absolute top-20 right-8 w-32 h-32 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute bottom-20 left-8 w-28 h-28 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+                </div>
               </div>
             </motion.div>
           </div>

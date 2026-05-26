@@ -13,71 +13,92 @@ export const Hero = () => {
   };
 
   return (
-    <section id="about" className="min-h-screen flex items-center justify-center px-6 md:px-20 py-20 relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
-      </div>
+    <section
+      id="home"
+      className="min-h-screen flex items-center justify-center px-6 md:px-20 py-20 relative overflow-hidden"
+    >
+      {/* Barely-visible radial ambient light */}
+      <div className="absolute inset-0 -z-10 pointer-events-none bg-[radial-gradient(ellipse_60%_45%_at_50%_30%,_hsl(220_10%_7%)_0%,_transparent_100%)]" />
+      {/* One very faint slow-drifting orb */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-white/[0.008] blur-[160px] animate-slow-drift pointer-events-none -z-10" />
+      {/* Bottom fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent -z-10 pointer-events-none" />
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.2 }}
-        transition={{ duration: 0.8 }}
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, ease: "easeOut" }}
         className="max-w-3xl mx-auto text-center"
       >
+        {/* Eyebrow */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-[11px] font-semibold text-white/30 tracking-[0.25em] uppercase mb-5"
+        >
+          AI/ML Engineer · LLM Systems · Applied ML
+        </motion.p>
+
+        {/* Name */}
         <motion.h1
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.6 }}
-          className="text-5xl md:text-7xl font-bold text-white mb-6"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.18 }}
+          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white mb-5 leading-none sm:whitespace-nowrap"
         >
           {hero.name}
         </motion.h1>
 
+        {/* Main headline */}
         <motion.p
           initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-2xl md:text-3xl text-blue-400 font-semibold mb-6"
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.32 }}
+          className="text-lg md:text-xl text-white/65 font-medium mb-4 leading-snug"
         >
-          {hero.title}
+          Building AI systems that work beyond clean demos.
         </motion.p>
 
+        {/* Short subheadline */}
         <motion.p
           initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-lg text-gray-300 mb-8 leading-relaxed"
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.42 }}
+          className="text-sm md:text-base text-white/35 font-light mb-8 max-w-md mx-auto leading-relaxed"
         >
-          {hero.bio}
+          I build practical AI tools across LLM systems, computer vision, medical imaging, forecasting, and deployment.
         </motion.p>
 
+        {/* Thin divider */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="relative z-50 flex flex-col sm:flex-row gap-4 justify-center"
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={{ scaleX: 1, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="w-8 h-px bg-white/12 mx-auto mb-8"
+        />
+
+        {/* CTAs */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.58 }}
+          className="relative z-50 flex flex-col sm:flex-row gap-3 justify-center"
         >
           <a
             href={hero.resumeUrl}
             download
-            className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 transform hover:scale-105"
+            className="inline-flex items-center gap-2 px-7 py-3 bg-white text-black text-sm font-semibold rounded-lg hover:bg-white/90 active:bg-white/80 transition-all duration-150 hover:-translate-y-0.5"
           >
-            <Download size={20} />
+            <Download size={15} />
             Download Resume
           </a>
           <button
             onClick={scrollToProjects}
-            className="inline-flex items-center gap-2 px-8 py-3 border-2 border-blue-400 text-blue-400 font-semibold rounded-lg hover:bg-blue-400/10 transition-all duration-300"
+            className="inline-flex items-center gap-2 px-7 py-3 border border-white/15 text-white/55 text-sm font-semibold rounded-lg hover:bg-white/[0.04] hover:border-white/30 hover:text-white/75 transition-all duration-200 hover:-translate-y-0.5"
           >
-            Scroll to Projects
-            <ArrowRight size={20} />
+            View Projects
+            <ArrowRight size={15} />
           </button>
         </motion.div>
       </motion.div>
