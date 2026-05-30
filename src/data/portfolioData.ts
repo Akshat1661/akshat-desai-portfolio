@@ -420,6 +420,15 @@ export const portfolioData: PortfolioData = {
 
   publications: [
     {
+      title: "Intelligent Shading Classification for Smart Reconfigurable Photovoltaic Panels in Residential Solar Systems",
+      conference: "Applied Cognitive Computing and Artificial Intelligence, CSCE 2025, CCIS 2933, Springer",
+      status: "Published",
+      link: "https://doi.org/10.1007/978-3-032-22205-3_39",
+      citations: 0,
+      coAuthors: "V Yedavilli, Akshat Desai, J Olivares, et al.",
+      year: 2026,
+    },
+    {
       title: "Multi-Class Classification of Breast Cancer Subtypes Using ResNet Architectures on Histopathological Images",
       conference: "Journal of Imaging 2025, 11, 284",
       status: "Published",
