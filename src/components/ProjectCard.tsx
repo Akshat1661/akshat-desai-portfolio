@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Github } from "lucide-react";
 import type { PortfolioData } from "@/data/portfolioData";
 import { ProjectModal } from "./ProjectModal";
 
@@ -87,9 +87,23 @@ export const ProjectCard = ({ project, index, featured = false }: ProjectCardPro
                   )}
                 </div>
 
-                <div className="flex items-center gap-1.5 text-white/40 group-hover:text-white/70 transition-colors pt-1">
-                  <span className="text-sm font-semibold">Explore Full Project</span>
-                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-200" />
+                <div className="flex items-center justify-between pt-1">
+                  <div className="flex items-center gap-1.5 text-white/40 group-hover:text-white/70 transition-colors">
+                    <span className="text-sm font-semibold">Explore Full Project</span>
+                    <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-200" />
+                  </div>
+                  {project.githubUrl && (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex items-center gap-1.5 text-xs font-semibold text-white/40 hover:text-white/80 transition-colors"
+                    >
+                      <Github size={13} />
+                      Code
+                    </a>
+                  )}
                 </div>
               </div>
 
@@ -161,9 +175,23 @@ export const ProjectCard = ({ project, index, featured = false }: ProjectCardPro
                 )}
               </div>
 
-              <div className="flex items-center justify-end gap-1.5 pt-3 border-t border-white/10 text-white/40 group-hover:text-white/70 transition-colors">
-                <span className="text-xs font-semibold">View Details</span>
-                <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+              <div className="flex items-center justify-between pt-3 border-t border-white/10">
+                <div className="flex items-center gap-1 text-white/40 group-hover:text-white/70 transition-colors">
+                  <span className="text-xs font-semibold">View Details</span>
+                  <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+                </div>
+                {project.githubUrl && (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex items-center gap-1 text-xs font-semibold text-white/35 hover:text-white/75 transition-colors"
+                  >
+                    <Github size={12} />
+                    Code
+                  </a>
+                )}
               </div>
             </div>
           )}

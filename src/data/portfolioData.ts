@@ -25,6 +25,7 @@ export type PortfolioData = {
       highlight?: boolean;
     }>;
     architectureDiagram: string[];
+    githubUrl?: string;
   }>;
   experience: Array<{
     title: string;
@@ -150,6 +151,7 @@ export const portfolioData: PortfolioData = {
         "Correction Loop [Compile Logs → LLM Context]",
         "VCD Downloads + Waveform Previews [Browser Sandbox]",
       ],
+      githubUrl: "https://github.com/Akshat1661/HDL-Sentinel",
     },
     {
       title: "Alzheimer's MRI Radiomics Pipeline",
@@ -199,6 +201,7 @@ export const portfolioData: PortfolioData = {
         "XGBoost Classifier [Multi-Class: CN / MCI / AD]",
         "3-Class Output [92.73% Combined Accuracy]",
       ],
+      githubUrl: "https://github.com/Akshat1661/alzheimer-mri-classification",
     },
     {
       title: "Lightwall Interactive AI Art Installation",
@@ -245,6 +248,7 @@ export const portfolioData: PortfolioData = {
         "Arduino/C++ Microcontroller [LED Arrays + Motor Control]",
         "Physical Installation [Lightwall — CCAM, Escondido]",
       ],
+      githubUrl: "https://github.com/Akshat1661/lightwall",
     },
     {
       title: "Solar Power Forecasting System",
@@ -286,6 +290,7 @@ export const portfolioData: PortfolioData = {
         "LightGBM Regressor [Gradient Boosting]",
         "2024 Test Set [96.02% Explained Variance]",
       ],
+      githubUrl: "https://github.com/Akshat1661/solar-panel-power-forecasting",
     },
     {
       title: "Cal Poly Pomona Dining AI Staffing Dashboard",
@@ -327,6 +332,7 @@ export const portfolioData: PortfolioData = {
         "AWS Bedrock + LangChain + LangGraph [Chatbot Agent]",
         "Staffing Insights Dashboard [Manager Interface]",
       ],
+      githubUrl: "https://github.com/Akshat1661/CPP-Dining-AI-Staffing-Dashboard",
     },
     {
       title: "Multi-Class Breast Cancer Subtype Classification",
@@ -375,45 +381,42 @@ export const portfolioData: PortfolioData = {
       title: "AI/LLM Research Developer",
       company: "California State University, Fullerton",
       period: "Jun 2025 - May 2026",
-      description: "Developed a Verilog AI tutor and simulator sandbox for faculty and students as part of ongoing research at CSUF.",
+      description: "Deployed a production Verilog AI tutor used by CSUF students and faculty for hardware design generation and simulation.",
       achievements: [
-        "Fine-tuned a 32B code LLM on 1,000 compiler-verified synthetic Verilog examples using LoRA to improve hardware-design generation quality.",
-        "Built RAG retrieval over 14,740 verified Verilog examples and theory documents using ChromaDB.",
-        "Built a browser-based simulator sandbox with Firebase login, persistent chat history, compile logs, VCD downloads, and waveform previews.",
-        "Reduced model footprint by approximately 70% through quantization for efficient vLLM inference.",
+        "Eliminated timing errors by fine-tuning a 32B code LLM on 1,000 compiler-verified examples using LoRA on H200 GPU.",
+        "Cut student onboarding time by ~45 minutes for 100+ users by shipping a browser-based simulator with Firebase auth, compile logs, and live waveform previews.",
+        "Compressed model footprint by 70% by quantizing the fine-tuned model from 64GB to 19.22GB for efficient vLLM inference.",
+        "Reduced generation failures by implementing dual-corpus RAG — 14,740 compiler-verified Verilog examples in ChromaDB.",
       ],
     },
     {
       title: "Lead AI Developer",
-      company: "Lightwall Interactive Art Installation",
+      company: "Worthwhile LLC",
       period: "Oct 2025 - Jan 2026",
-      description: "Built the local AI system for Lightwall, a public interactive museum art installation at the California Center for the Arts Museum in Escondido.",
+      description: "Enabled real-time voice interaction for Lightwall, a museum AI art installation, by building an offline Llama/Whisper/radar pipeline with sub-second latency.",
       achievements: [
-        "Connected Llama inference, speech recognition, radar-based visitor sensing, and hardware-control logic into a real-time pipeline.",
-        "Converted LLM output into structured hardware-control tags driving LED behavior, motor responses, AI mood states, and personality-state changes.",
-        "Reduced hallucinations through project memory, live source scanning, grounded context injection, and JSON persona loading.",
+        "Turned visitor proximity and LLM mood into live physical behavior, controlling LED colors, stepper motors, and personality states through hardware-control tags.",
+        "Grounded responses and reduced hallucinations by injecting project memory and live codebase context into system prompts.",
       ],
     },
     {
       title: "Machine Learning Research Associate",
       company: "California State University, Fullerton",
       period: "Nov 2024 - May 2025",
-      description: "Led Alzheimer's disease MRI radiomics research using 3D brain scans, automated HPC pipelines, and machine learning classification.",
+      description: "Led Alzheimer's MRI radiomics research to classify CN, MCI, and AD patients from 3D brain scans using machine learning.",
       achievements: [
-        "Increased usable ADNI cohort from 275 to 1,229 subjects by building a Subject Squashing pipeline to recover fragmented PyRadiomics output.",
-        "Automated FreeSurfer segmentation and PyRadiomics feature extraction on Linux HPC clusters using Python and SLURM array jobs, reducing processing runtime by 50%.",
-        "Achieved 92.73% accuracy on CN/MCI/AD classification after reducing 5,980 features to 77 biomarkers using LASSO and XGBoost.",
+        "Increased usable patient cohort from 275 to 1,229 ADNI subjects (4.5x) by building a custom pipeline that reconstructed fragmented MRI subfield outputs into complete patient-level feature vectors.",
+        "Cut MRI processing time by 50% by automating segmentation and feature extraction on HPC clusters using SLURM array jobs.",
+        "Achieved 92.73% accuracy by reducing 5,980 radiomics features to 77 biomarkers via LASSO and training XGBoost.",
       ],
     },
     {
       title: "Computer Vision & Imaging Intern",
       company: "Space Applications Centre, ISRO",
       period: "Dec 2023 - May 2024",
-      description: "Built a real-time satellite-camera exposure-control pipeline using Python, OpenCV, pyueye, and IDS live camera streaming.",
+      description: "Built a real-time satellite-camera exposure-control pipeline at ISRO, achieving near-accurate correction at 2 fps on live camera streams with no pre-existing dataset or deep learning required.",
       achievements: [
-        "Detected satellite-like objects using Haar Cascade object detection, ROI extraction, and histogram analysis on live camera frames.",
-        "Adjusted camera exposure dynamically using skewness-based control to correct underexposed and overexposed frames in real time.",
-        "Validated the algorithm in a dark-room setup using reflective satellite-like material against a space-like black background.",
+        "Evaluated DSOD and DNN-based exposure methods, then developed a dataset-free skewness algorithm using histogram third-moment analysis.",
       ],
     },
   ],

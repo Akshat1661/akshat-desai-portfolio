@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Cpu, Layers, GitBranch } from "lucide-react";
+import { X, Cpu, Layers, GitBranch, Github } from "lucide-react";
 import type { PortfolioData } from "@/data/portfolioData";
 
 type Project = PortfolioData["projects"][0];
@@ -57,13 +57,26 @@ export const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) =>
                       </div>
                     </div>
 
-                    {/* Close */}
-                    <button
-                      onClick={onClose}
-                      className="w-9 h-9 flex items-center justify-center rounded-lg bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] transition-colors flex-shrink-0"
-                    >
-                      <X size={16} className="text-white/60" />
-                    </button>
+                    {/* Actions */}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {project.githubUrl && (
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-white/70 bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] rounded-lg transition-colors"
+                        >
+                          <Github size={13} />
+                          View on GitHub
+                        </a>
+                      )}
+                      <button
+                        onClick={onClose}
+                        className="w-9 h-9 flex items-center justify-center rounded-lg bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] transition-colors"
+                      >
+                        <X size={16} className="text-white/60" />
+                      </button>
+                    </div>
                   </div>
                 </div>
 

@@ -127,7 +127,7 @@ export function ContactSection() {
                 </div>
                 <div>
                   <p className="text-xs text-zinc-600 mb-0.5">Location</p>
-                  <p className="text-sm font-medium text-white/80">Fullerton, California</p>
+                  <p className="text-sm font-medium text-white/80">Fullerton, California, United States</p>
                 </div>
               </div>
             </div>
@@ -153,7 +153,9 @@ export function ContactSection() {
                 <Linkedin size={18} />
               </a>
               <a
-                href="mailto:akshat.desai.754@gmail.com"
+                href="https://mail.google.com/mail/?view=cm&to=akshat.desai.754@gmail.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 rounded-lg bg-white/[0.06] border border-white/[0.09] flex items-center justify-center text-white/40 hover:bg-white/[0.1] hover:text-white/80 transition-colors"
                 aria-label="Email"
               >
