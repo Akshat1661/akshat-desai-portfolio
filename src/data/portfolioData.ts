@@ -423,6 +423,24 @@ export const portfolioData: PortfolioData = {
 
   publications: [
     {
+      title: "CaltransGPT Using Retrieval-Augmented Large Language Models in Transportation Agencies",
+      conference: "2026 IEEE World AI IoT Congress (AIIoT), pp. 0307-0312, Seattle, WA",
+      status: "Published",
+      link: "https://doi.org/10.1109/AIIoT68874.2026.11569521",
+      citations: 0,
+      coAuthors: "R Lekhi, Akshat Desai, R Mahto, D Sharma",
+      year: 2026,
+    },
+    {
+      title: "Addressing Class Imbalance in MRI-based Alzheimer's Diagnosis using WGAN-GP",
+      conference: "2026 IEEE World AI IoT Congress (AIIoT), pp. 0300-0306, Seattle, WA",
+      status: "Published",
+      link: "https://doi.org/10.1109/AIIoT68874.2026.11569633",
+      citations: 0,
+      coAuthors: "J Desai, A George, Akshat Desai, R Mahto",
+      year: 2026,
+    },
+    {
       title: "Intelligent Shading Classification for Smart Reconfigurable Photovoltaic Panels in Residential Solar Systems",
       conference: "Applied Cognitive Computing and Artificial Intelligence, CSCE 2025, CCIS 2933, Springer",
       status: "Published",
